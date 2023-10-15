@@ -51,7 +51,7 @@ export default {
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">                
-                        <img src="../../../../public/Setting/In_Stock/menu.png" class="mr-3 w-[30px]" alt="menu">
+                        <Icon icon="ant-design:bars-outlined" class="mr-3 w-[30px] text-white text-3xl"/>     
                         <span class="text-white font-bold text-2xl">銷貨查詢</span> 
                     </button>
                 </h2>

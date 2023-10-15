@@ -38,16 +38,16 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="../../public/caruful/unsplash_693RRbiTAaI.jpg" class="d-block w-100 h-[480px]" alt="...">
+        <img src="/caruful/unsplash_693RRbiTAaI.jpg" class="d-block w-100 h-[480px]" alt="...">
       </div>
       <div class="carousel-item">
-        <img src="../../public/caruful/unsplash__nm_mZ4Cs2I.jpg" class="d-block w-100 h-[480px]" alt="...">
+        <img src="/caruful/unsplash__nm_mZ4Cs2I.jpg" class="d-block w-100 h-[480px]" alt="...">
       </div>
       <div class="carousel-item">
-        <img src="../../public/caruful/unsplash_it4Z1ykl_Z4.jpg" class="d-block w-100 h-[480px]" alt="...">
+        <img src="/caruful/unsplash_it4Z1ykl_Z4.jpg" class="d-block w-100 h-[480px]" alt="...">
       </div>
       <div class="carousel-item">
-        <img src="../../public/caruful/unsplash_ZQZrvL7DwiI.jpg" class="d-block w-100 h-[480px]" alt="...">
+        <img src="/caruful/unsplash_ZQZrvL7DwiI.jpg" class="d-block w-100 h-[480px]" alt="...">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -77,7 +77,7 @@
           <div v-for="(item1) in [1,2,3]" :class="{'carousel-item active':item1===1,'carousel-item':item1!==1}">
             <div class="row">
               <div v-for="(item2) in [1,2,3,4,5]" class="card w-[13rem] mr-3">
-                <img src="../../public/caruful/store_ca/unsplash_HH4WBGNyltc.jpg" class="card-img-top thisimg" alt="...">
+                <img src="/caruful/store_ca/unsplash_HH4WBGNyltc.jpg" class="card-img-top thisimg" alt="...">
                 <div class="card-body">
                   <p class="card-text">Some quick example text to </p>
                   <h1 class="text-red-600 text-3xl my-3">$ {{ 200 }}</h1>

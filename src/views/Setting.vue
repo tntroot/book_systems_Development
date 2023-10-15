@@ -21,7 +21,7 @@ export default {
                 <h2 class="accordion-header" id="headingThree">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                         <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto space">
-                            <img src="../../public/Setting/mdi_people-group.png" class="mr-3 w-[30px]" alt="">人員資料
+                            <Icon icon="mdi:account-group" color="red"  class="mr-3 w-[30px]" />人員資料
                         </div>
                     </button>
                 </h2>
@@ -38,7 +38,7 @@ export default {
                     <div id="collapseThree" class="accordion show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
-                                <img src="../../public/Setting/grommet-icons_user-manager.png" class="mr-3 w-[30px]" alt="">客戶
+                                <Icon icon="grommet-icons:user-manager" color="red" class="mr-3 w-[30px]"/>客戶
                             </div>                          
                         </div>
                     </div>
@@ -57,7 +57,7 @@ export default {
                 <h2 class="accordion-header" id="headingFour">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                         <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto space">
-                            <img src="../../public/Setting/fluent-mdl2_account-management.png" class="mr-3 w-[30px]" alt="">帳務管理
+                            <Icon icon="fluent-mdl2:account-management" width="30" class="mr-3  font-bold text-red-600"/>帳務管理
                         </div>
                     </button>
                 </h2>
@@ -65,7 +65,7 @@ export default {
                     <div id="collapseFour" class="accordion show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
-                                <img src="../../public/Setting/purchased.png" class="mr-3 w-[30px]" alt="">進貨
+                                <Icon icon="arcticons:purchased-apps" color="red" class="mr-3"  width="30"/>進貨
                             </div>                           
                         </div>
                     </div>
@@ -74,7 +74,7 @@ export default {
                     <div id="collapseFour" class="accordion show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
-                                <img src="../../public/Setting/sale.png" class="mr-3 w-[30px]" alt="">銷貨
+                                <Icon icon="ps:sale-tag" color="red" class="mr-3 w-[30px]"/>銷貨
                             </div>                          
                         </div>
                     </div>
@@ -83,7 +83,7 @@ export default {
                     <div id="collapseFour" class="accordion show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
-                                <img src="../../public/Setting/inventory.png" class="mr-3 w-[30px]" alt="">庫存
+                                <Icon icon="ic:baseline-inventory" color="red" class="mr-3 w-[30px]"/>庫存
                             </div>                           
                         </div>
                     </div>

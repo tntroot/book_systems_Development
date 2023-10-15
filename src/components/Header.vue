@@ -9,17 +9,17 @@ export default {
 <template>
     <header class="bg-[gray] p-6 flex justify-evenly items-center">
         <RouterLink to="/" class="flex items-center hover:scale-105 active:scale-95 cursor-pointer">
-            <img src="../../public/book_header_icon.png" alt="book" width="50">
+            <Icon icon="emojione:books" width="50" class="mx-auto" />
             <h1 class="text-3xl mx-6 font-bold">圖書管理系統</h1>
         </RouterLink>
         <div class=" w-fit relative">
             <input class="pr-14 text-xl p-3 rounded-full w-[25rem]" type="text">
             <RouterLink to="/search" >
-                <img src="../../public/search.png"  width="35" alt="" class=" cursor-pointer absolute top-3 right-4 hover:scale-105 active:scale-95">
+                <Icon icon="flat-color-icons:search" width="35" class=" cursor-pointer absolute top-3 right-4 hover:scale-105 active:scale-95"/>
             </RouterLink>        
         </div>
         <div class="flex items-center">
-            <img src="../../public/people.png" alt="people" width="50">
+            <img src="/people.png" alt="people" width="50">
             <div class="flex items-center text-3xl font-bold mx-6 tracking-[.3em]">
                 <RouterLink to="/login" class=" hover:scale-105 active:scale-95 hover:text-red-600 cursor-pointer">登入</RouterLink>
                 <p>/</p>

@@ -70,10 +70,10 @@ export default {
 }
 </script>
 <template>
-    <form v-if="verify" action="" method="get" @submit="sign" class="w-fix mx-auto">
-        <div class="bg-[#bcbcbc]  p-6 rounded-xl font-bold">
+    <form v-if="verify" action="" method="get" @submit="sign" class="w-fix mx-auto ">
+        <div class="bg-[#bcbcbc]  p-12 font-bold h-[90vh]">
             <div class="mx-auto">
-                <img src="../../public/book_header_icon.png" alt="book" width="100" class="mx-auto">
+                <Icon icon="emojione:books" width="100" class="mx-auto" />
                 <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
             </div>
             <div class="flex justify-evenly">
@@ -119,7 +119,7 @@ export default {
 
     <div v-else class="w-fix mx-auto flex flex-col items-center ">
         <div class="mx-auto ">
-            <img src="../../public/book_header_icon.png" alt="book" width="100" class="mx-auto">
+            <Icon icon="emojione:books" width="100" class="mx-auto" />
             <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
         </div>
         <div v-if="verify_email">

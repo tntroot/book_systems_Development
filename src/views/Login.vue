@@ -10,7 +10,7 @@ export default {
     <div class="login">
         <div class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col">
             <div>
-                <img src="../../public/book_header_icon.png" alt="book" width="100" class="mx-auto">
+                <Icon icon="emojione:books" width="100" class="mx-auto" />
                 <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
             </div>
             <div class="mb-4">
@@ -34,13 +34,15 @@ export default {
 
 <style lang="scss" scoped>
     .login{
+        height: 90vh;
         background-image: url('../../public/book.jpg');
-        background-size: cover;
+        background-size:cover;
         background-position: center center;
         background-repeat: no-repeat;
-        padding: 1.5rem;
+        padding: 0 10rem;
         margin: 0 auto;
         display: flex;
+        align-items: center;
         justify-content: flex-end;
     }
 </style>

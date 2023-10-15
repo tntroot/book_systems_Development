@@ -43,9 +43,9 @@ export default {
 }
 </script>
 <template>
-    <form v-if="ckeckEmail" action="" method="get" onsubmit="return false"  class="w-fix flex flex-col items-center">
+    <form v-if="ckeckEmail" action="" method="get" onsubmit="return false"  class="w-fix flex flex-col items-center my-20">
         <div class="mx-auto mb-4">
-            <img src="../../public/book_header_icon.png" alt="book" width="100" class="mx-auto">
+            <Icon icon="emojione:books" width="100" class="mx-auto" />
             <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
         </div> 
         <div class="mb-4">
@@ -56,9 +56,9 @@ export default {
         <button type="sumbit" class="px-14 my-3 py-3 text-white bg-gray-500 mx-auto rounded-xl block hover:scale-105 active:scale-95" @click="vey1">確認</button>
     </form>
 
-    <div v-else class="w-fix mx-auto flex flex-col items-center ">
+    <div v-else class="w-fix mx-auto flex flex-col items-center my-20">
         <div class="mx-auto mb-4">
-            <img src="../../public/book_header_icon.png" alt="book" width="100" class="mx-auto">
+            <Icon icon="emojione:books" width="100" class="mx-auto" />
             <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
         </div> 
         <div v-if="verify_email">
