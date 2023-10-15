@@ -7,7 +7,7 @@ export default {
 }
 </script>
 <template>
-    <div class="flex">
+    <div class="flex items-start">
         <div class="accordion min-w-fit bg-[#afafaf] h-screen sticky top-0" id="accordionExample">
             <!-- 通用 -->
             <RouterLink to="/setting" class="area">

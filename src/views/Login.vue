@@ -8,7 +8,7 @@ export default {
 </script>
 <template>
     <div class="login">
-        <div class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col">
+        <form class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col">
             <div>
                 <Icon icon="emojione:books" width="100" class="mx-auto" />
                 <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
@@ -19,7 +19,7 @@ export default {
             </div>
             <div class="mb-2">
                 <label for="Passwork" class="block text-xl">密碼</label>
-                <input id="Passwork" type="password" placeholder="密碼" class="p-3 rounded-lg w-[25rem]">
+                <input id="Passwork" type="password" placeholder="密碼" class="p-3 rounded-lg w-[25rem]" autocomplete="off">
             </div>
             <div class="flex justify-between my-3">
                 <RouterLink to="/sign" class="hover:scale-105 active:scale-95 hover:text-red-600 cursor-pointer">註冊</RouterLink>
@@ -28,7 +28,7 @@ export default {
             <RouterLink to="/setting" class="px-14 py-3 text-white bg-gray-500 mx-auto rounded-xl block hover:scale-105 active:scale-95">
                 登入
             </RouterLink>   
-        </div>    
+        </form>    
     </div>
 </template>
 

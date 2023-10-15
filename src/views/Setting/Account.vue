@@ -51,7 +51,7 @@ export default {
 }
 </script>
 <template>
-    <div class=" border-2 border-gray-600 rounded-xl p-11 mx-auto">
+    <form class=" border-2 border-gray-600 rounded-xl p-11 mx-auto my-12">
         <div class="head_img">
             <input type="file" id="f" accept="image/*" @change="handleFile" class="hiddenInput" style="display:none"/> 
             <img id="img" class="avatarImg" :src="this.avatar" onclick="f.click()">
@@ -63,28 +63,28 @@ export default {
                 <input id="Account" type="text" class="p-2 rounded-lg border-2 border-gray-300" v-model="Account" disabled>
             </div>
             <div class="mx-6">
-                <label for="Account" class="block text-xl text-bold">姓名</label>
-                <input id="Account" type="text" class="p-2 rounded-lg border-2 border-gray-300" v-model="name">
+                <label for="Name" class="block text-xl text-bold">姓名</label>
+                <input id="Name" type="text" class="p-2 rounded-lg border-2 border-gray-300" v-model="name">
             </div>
         </div>
         <div class="flex mb-3">
             <div class="mx-6">
-                <label for="Account" class="block text-xl text-bold">信箱</label>
-                <input id="Account" type="email" class="p-2 rounded-lg border-2 border-gray-300" v-model="email" disabled>
+                <label for="Email" class="block text-xl text-bold">信箱</label>
+                <input id="Email" type="email" class="p-2 rounded-lg border-2 border-gray-300" v-model="email" disabled>
                 <div class="text-blue-600 hover:text-red-600 active:scale-95 cursor-pointer text-xl inline-block ml-3">修改</div>
             </div>
             <div class="mx-6">
-                <label for="Account" class="block text-xl text-bold">出生年月日</label>
-                <input type="date" :min="minYear" :max="maxYear" class="p-2 rounded-lg border-2 border-gray-300" v-model="born">
+                <label for="Born" class="block text-xl text-bold">出生年月日</label>
+                <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-2 rounded-lg border-2 border-gray-300" v-model="born">
             </div>
         </div>
         <div class="mx-6">
-            <label for="Account" class="block text-xl text-bold">密碼</label>
-            <input type="password" class="p-2 rounded-lg border-2 border-gray-300" v-model="passwork" disabled>
+            <label for="pwd" class="block text-xl text-bold">密碼</label>
+            <input id="pwd" type="password" class="p-2 rounded-lg border-2 border-gray-300" v-model="passwork" disabled autocomplete="off">
             <div class="text-blue-600 hover:text-red-600 active:scale-95 cursor-pointer text-xl inline-block ml-3">修改</div>
         </div>
         <button type="button" class="px-14 py-3 mt-6 text-white bg-gray-500 mx-auto rounded-xl text-xl font-bold block hover:scale-105 active:scale-95">儲存</button>
-    </div>
+    </form>
 </template>
 
 <style lang="scss">
