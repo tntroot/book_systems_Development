@@ -70,8 +70,8 @@ export default {
 }
 </script>
 <template>
-    <form v-if="verify" action="" method="get" @submit="sign" class="w-fix mx-auto ">
-        <div class="bg-[#bcbcbc]  p-12 font-bold h-[90vh]">
+    <form v-if="verify" action="" method="get" @submit="sign" class="w-fix mx-auto">
+        <div class="bg-[#bcbcbc]  p-12 font-bold">
             <div class="mx-auto">
                 <Icon icon="emojione:books" width="100" class="mx-auto" />
                 <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
@@ -84,7 +84,8 @@ export default {
                     </div>
                     <div class="mb-4">
                         <label for="Born" class="block text-xl">出生年月日</label>
-                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]" v-model="bron">
+                        <!-- showPicker() -->
+                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]"  v-model="bron">
                     </div>
                     <div class="mb-4">
                         <label for="Email" class="block text-xl">Email</label>
@@ -138,6 +139,6 @@ export default {
 
 </template>
 
-<style lang="scss">
-    
+<style lang="scss" scoped>
+
 </style>
