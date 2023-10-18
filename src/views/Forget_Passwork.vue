@@ -17,18 +17,31 @@ export default {
     },
     methods:{
         vey1(){
-            Object.entries(localStorage).forEach(([key,value],index)=>{
-                const value1=JSON.parse(value);
-                if(this.email===value1.email){
+            // Object.entries(localStorage).forEach(([key,value],index)=>{
+            //     //const value1=JSON.parse(value);
+            //     if(this.email===value1.email){
+            //         this.vey=Math.floor(Math.random()*999998)+1;
+            //         this.find_email=false;
+            //         this.ckeckEmail=false;
+            //         console.log(1);
+
+            //     }else if(index===localStorage.length){
+            //         this.find_email=true;
+            //     }
+            // })
+
+            const getKey = localStorage.getItem("a@gmail.com");
+            const value1=JSON.parse(getKey);
+
+            if(this.email===value1.email){
                     this.vey=Math.floor(Math.random()*999998)+1;
                     this.find_email=false;
                     this.ckeckEmail=false;
-                    console.log(1);
+                    console.log(this.vey);
 
                 }else if(index===localStorage.length){
                     this.find_email=true;
                 }
-            })
         },
         verify_check(){
             if(this.verify_text===null || this.vey!==this.verify_text){

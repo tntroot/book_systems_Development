@@ -1,5 +1,6 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import axios from 'axios';
 export default {
     components:{
         RouterView,RouterLink
@@ -18,8 +19,15 @@ export default {
             passwork:"",repasswork:"",pa_repa:false,
 
             verify:true,   // 驗證
-            verify_text:null,verify_TF:false,verify_num:null,
 
+            /** * @param {text} verify_text 輸入產生的驗證碼 */
+            verify_text:null,
+            /** * @param {text} verify_TF 驗證碼輸入錯誤顯示的文字 */
+            verify_TF:false,
+            /** * @param {text} verify_num 隨機驗證碼  */
+            verify_num:null,
+
+            /** * @param {text} verify_email 是否註冊成功  */
             verify_email:true
 
         }
@@ -35,20 +43,48 @@ export default {
             if(this.passwork!==this.repasswork){
                 this.pa_repa=true;
             }else if(this.passwork===this.repasswork && this.repasswork!=="" && this.passwork!==""){
-                this.pa_repa=false;
-                this.verify=false;  // 叫出驗證頁面
+                // this.pa_repa=false;
+                // this.verify=false;  // 叫出驗證頁面
 
-                this.verify_num=Math.floor(Math.random()*999998)+1;
-                console.log(this.verify_num);
-                localStorage.setItem(this.email,JSON.stringify({
-                    name:this.name,
-                    born:this.bron,
-                    email:this.email,
-                    account:this.account,
-                    passwork:this.passwork,
-                    redate:this.redate.toISOString().split('T')[0],
-                    verify:this.verify_num
-                }));
+                // this.verify_num=Math.floor(Math.random()*999998)+1;
+                // console.log(this.verify_num);
+                // localStorage.setItem(this.email,JSON.stringify({
+                //     name:this.name,
+                //     born:this.bron,
+                //     email:this.email,
+                //     account:this.account,
+                //     passwork:this.passwork,
+                //     redate:this.redate.toISOString().split('T')[0],
+                //     verify:this.verify_num
+                // }));
+                // event.preventDefault()
+                axios.post("http://localhost:8080/book_systems/sign",{
+                    account:this.account, 
+                    user_name:this.name, 
+                    email:this.email, 
+                    pwd:this.passwork, 
+                    born:this.bron, 
+                    redate:this.redate
+                },{withCredentials: true})
+                .then( res =>{
+
+                    const resData = res.data;
+                    console.log(resData);
+
+                    if(resData.code === "200"){
+                        this.pa_repa=false;
+                        this.verify=false;
+
+                        setTimeout(()=>{
+                            this.$router.push('/login');
+                        },3000)
+                    }else{
+                        alert(resData.message);
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                })
             }
         },
         verify_check(){
@@ -70,7 +106,7 @@ export default {
 }
 </script>
 <template>
-    <form v-if="verify" action="" method="get" @submit="sign" class="w-fix mx-auto">
+    <form v-if="verify" action="" method="get" @submit.prevent="sign()" class="w-fix mx-auto">
         <div class="bg-[#bcbcbc]  p-12 font-bold">
             <div class="mx-auto">
                 <Icon icon="emojione:books" width="100" class="mx-auto" />
@@ -85,7 +121,7 @@ export default {
                     <div class="mb-4">
                         <label for="Born" class="block text-xl">出生年月日</label>
                         <!-- showPicker() -->
-                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]"  v-model="bron">
+                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]"  v-model="bron" required>
                     </div>
                     <div class="mb-4">
                         <label for="Email" class="block text-xl">Email</label>
@@ -105,6 +141,8 @@ export default {
                     <div class="mb-4">
                         <label for="Passwork" class="block text-xl">密碼</label>
                         <input id="Passwork" type="password" placeholder="密碼" class="p-3 rounded-lg w-[25rem]" required v-model="passwork">
+                        <p class="text-red-600 text-xl">(請輸入 8~16位密碼，</p>
+                        <p class="text-red-600 text-xl">並包含 小寫字母、大寫字母、數字 各一個)</p>
                     </div>
                     <div class="mb-4">
                         <label for="RePasswork" class="block text-xl">確認密碼</label>
@@ -123,7 +161,7 @@ export default {
             <Icon icon="emojione:books" width="100" class="mx-auto" />
             <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
         </div>
-        <div v-if="verify_email">
+        <!-- <div v-if="verify_email">
             <p class="my-6 text-xl">已將驗證碼發送到你的郵件，請確認你信箱中的驗證碼</p>
             <div class="mb-4">
                 <label for="Account" class="block text-xl">驗證碼</label>
@@ -134,7 +172,11 @@ export default {
         </div>
         <div v-else class="flex items-center flex-col">
             <p class="my-6 text-xl">註冊成功</p>
-        </div>   
+        </div>    -->
+
+        <div v-if="verify_email" class="flex items-center flex-col">
+            <p class="my-6 text-xl">註冊成功</p>
+        </div>
     </div>
 
 </template>
