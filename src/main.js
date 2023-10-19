@@ -46,7 +46,6 @@ const app = createApp(App)
         if(data.code === "200"){
           next();
         }else{
-          account = "";
           alert("請先登入");
           next("/login")
         }

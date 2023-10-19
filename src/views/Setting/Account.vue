@@ -1,5 +1,5 @@
 <script>
-
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -7,7 +7,7 @@ export default {
             born:null,    // 生日
             email:"",   
             name:"",
-            passwork:"",
+            passwork:"********",
             redate:"" ,   // 註冊日期
 
             minYear: "",   // 設定最大/最小生日
@@ -18,17 +18,23 @@ export default {
     },
     methods:{
         seetting(){
-            const Account_data=JSON.parse(localStorage.getItem('a@gmail.com'));
+
             const thisdate=new Date();  // 現在時間
 
-            this.Account=Account_data.account;
-            this.name=Account_data.name;
-            this.email=Account_data.email;
-            this.born=Account_data.born;
-            this.passwork=Account_data.passwork;
+            axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
+            .then(res => res.data)
+            .then( data =>{
+                if(data.code==="200"){
+                    this.Account = data.userShows.account;
+                    this.name=data.userShows.user_name;
+                    this.email=data.userShows.email;
+                    this.born=data.userShows.born.split('T')[0];
+                }
+            })
 
             this.minYear=eval(thisdate.getFullYear()+"-100")+"-01-01";
-            this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
+            // this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
+            this.maxYear = thisdate.toLocaleString('sv').split(' ')[0];
 
         },
         handleFile(e){
@@ -52,7 +58,10 @@ export default {
 </script>
 <template>
     <form class=" border-2 border-gray-600 rounded-xl p-11 mx-auto my-12">
-        <div class="head_img">
+
+        <div class="py-6 w-full text-center font-bold text-3xl border-b-2 border-b-[#bdbdbd] mb-6">修改個人資訊</div>
+
+        <div v-if="false" class="head_img">
             <input type="file" id="f" accept="image/*" @change="handleFile" class="hiddenInput" style="display:none"/> 
             <img id="img" class="avatarImg" :src="this.avatar" onclick="f.click()">
             <!-- <p class="text_area">上傳頭像</p> -->
