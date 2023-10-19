@@ -21,7 +21,7 @@ export default {
                 console.log(thisData);
 
                 if(thisData.code==="200"){
-                    this.$router.push("/setting/staff")
+                    this.$router.push("/setting");
                 }else{
                     alert(thisData.message)
                 }

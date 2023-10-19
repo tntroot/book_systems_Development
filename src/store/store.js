@@ -7,7 +7,10 @@ export default defineStore("indexStatus",{
     // date
     // state 要 return 物件時，要用()包起來，不然會被當成JS程式
     state:()=>({
-        location: 10
+        location: 10,
+
+        isLogin: false,
+        account:"",
     })
     // state:()=>{
     //     return {
@@ -33,6 +36,15 @@ export default defineStore("indexStatus",{
         },
         setLocation(num){
             this.location=num;
+        },
+
+        getIsLogin(){
+            console.log("hi")
+            return [this.isLogin,this.account];
+        },
+        setISLogin(login,account){
+            this.isLogin = login;
+            this.account = account;
         }
     }
 });
