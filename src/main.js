@@ -19,12 +19,10 @@ const app = createApp(App)
 
   
   router.beforeEach((to,from,next)=>{
-    console.log("on")
     if(to.meta.headerLogin){
       axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
       .then( res => res.data )
       .then( data =>{
-        console.log(data)
         if(data.code === "200"){
             defineStore().setISLogin(true,data.userShows.account);
             next();

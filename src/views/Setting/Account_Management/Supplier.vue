@@ -7,6 +7,14 @@ export default {
     },
     data() {
         return {
+
+            location_name:{
+                mapShow:false,
+                showAllMap:[],
+                jobArea: "地區不限",
+                thisMapId: ""
+            },
+
             search:{
                 suName:"",
                 suComplied:"",
@@ -28,7 +36,6 @@ export default {
                     compiled:"",
                     email:"", 
                     phone:"", 
-                    location_name:""
                 }
             },
             bgPage:false,
@@ -40,6 +47,15 @@ export default {
             this.search.suCity={
                 mapShow:false,
                 showAllMap:this.search.suCity.showAllMap,
+                jobArea:item.location_name,
+                thisMapId:item.location_id
+            }
+        },
+
+        changeMapInsertAndUpdate(item){
+            this.location_name = {
+                mapShow:false,
+                showAllMap: this.location_name.showAllMap,
                 jobArea:item.location_name,
                 thisMapId:item.location_id
             }
@@ -73,7 +89,8 @@ export default {
             .then(data =>{
                 const arrList = data.data;
                 if(arrList.code==="200"){
-                    this.search.suCity.showAllMap = [{location_id:"C",location_name:"地區不限"}].concat(arrList.locations);
+                    this.location_name.showAllMap = arrList.locations;
+                    this.search.suCity.showAllMap = [{location_id:"",location_name:"地區不限"}].concat(arrList.locations);
                 }
             });
         
@@ -176,38 +193,55 @@ export default {
         </div>
     </div>
   
-    <div v-show="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10">
+    <div v-show="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
         <form action="#" method="post" @submit.prevent="editCheck">
-            <h1 class="text-center text-3xl font-bold my-3">新增供應商</h1>
+            <h1 class="text-center text-3xl font-bold my-6">新增供應商</h1>
             <ul class=" editContent">
                 <li>
                     <label for="oldPwd">廠商名稱: </label>
-                    <div>
+                    <div class="bgc">
                         <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入廠商名稱"  required>
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd">統一編號: </label>
-                    <div>
+                    <div class="bgc">
                         <input id="newPwd" type="number" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off">
                     </div>      
                 </li>
                 <li>  
-                    <label for="email">信箱: </label>
-                    <div>
+                    <label for="email">信　　箱: </label>
+                    <div class="bgc">
                         <input id="email" type="email" v-model="insert.data.email" placeholder="請輸入Email" required autocomplete="email">
                     </div>
                 </li>
                 <li>  
-                    <label for="phone">電話: </label>
-                    <div>
+                    <label for="phone">電　　話: </label>
+                    <div class="bgc">
                         <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="tel">
                     </div>
                 </li>
                 <li>  
-                    <label for="location">詳細位置: </label>
+                    <label for="location">地　　址: </label>
                     <div>
-                        <input id="location" type="email" v-model="insert.data.location_name" placeholder="請輸入詳細地址" required>
+                        <div id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1" >
+                            <div class="flex items-center justify-evenly m-2.5" @click="location_name.mapShow = !location_name.mapShow">
+                                <p>{{ location_name.jobArea }}</p>
+                                <Icon icon="iconamoon:arrow-down-2-bold" width="20" />
+                            </div>
+                            <div v-if="location_name.mapShow" class="mapAndPriceSelect shadow-xl">
+                                <div v-for="(item, index) in location_name.showAllMap"
+                                    class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white"
+                                    @click="changeMapInsertAndUpdate(item);">
+                                    <input type="radio" :id="'showMap' + index" name="thismap" class="mr-3 cursor-pointer" :value="item.location_id"
+                                        :checked="location_name.jobArea === item.location_name">
+                                    <label :for="'showMap' + index" class="cursor-pointer">{{ item.location_name }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bgc">
+                            <input id="location" type="email" v-model="insert.data.location_name" placeholder="請輸入詳細地址" required>
+                        </div>    
                     </div>
                 </li>
             </ul>
@@ -319,10 +353,11 @@ export default {
 
     // 新增/修改介面
     .editContent{
-        margin: 2.5rem 5rem;
+        margin: 0 auto;
         li{
             display: flex;
             align-items: center;
+            justify-content: center;
             margin: 1rem 0;
             font-weight: 700;
             font-size: 1.25rem;
@@ -332,17 +367,18 @@ export default {
                 margin-right: 0.75rem;
             }
 
-            div{
+            .bgc{
 
                 background-color: #b7b7b7;
                 border-radius: 0.25rem;
-                padding: 0.5rem 0.75rem;
+                padding: 0.75rem 1rem;
                 margin: 0 0.5rem;
 
                 input{
                     border-bottom: 1px #757575 solid;
                     outline: none;
                     background-color: transparent;
+                    width: 20rem;
 
                     &:-webkit-autofill{
                         

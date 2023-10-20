@@ -9,10 +9,10 @@ export default {
     },
     data() {
         return {
-            // account:defineStore().getIsLogin()[1]
+            
         }
     },
-    computed:{...mapState(defineStore,['account'])},
+    computed:{...mapState(defineStore,['account','accountt'])},
     methods:{
 
         ...mapActions(defineStore,["getIsLogin"]),
@@ -35,16 +35,17 @@ export default {
             .then(data =>{
                 if(data.code === "200"){
                     alert("成功登出");
-                    this.$router.push("/");
+                    this.$router.push({
+                        path:"/",
+                        query:{
+                            "":""
+                        }
+                    });
                 }
             })
         },
-    },
-    updated(){
-        
-        // console.log(this.getIsLogin()[0])
-        // this.account = this.getIsLogin()[1];
 
+        
     }
 }
 </script>
@@ -60,7 +61,7 @@ export default {
                 <Icon icon="flat-color-icons:search" width="35" class=" cursor-pointer absolute top-3 right-4 hover:scale-105 active:scale-95"/>
             </RouterLink>        
         </div>
-        <div class="flex items-center">
+        <div class="flex items-center" >
             <div v-if="account===''" class="flex items-center text-3xl font-bold mx-6 tracking-[.3em]">
                 <RouterLink to="/login" class=" hover:scale-105 active:scale-95 hover:text-red-600 cursor-pointer">登入</RouterLink>
                 <p>/</p>
@@ -79,7 +80,7 @@ export default {
                         <RouterLink to="/setting/shopping" >
                             <li class="py-2 hover:bg-[#dddddd] text-sm pl-6 cursor-pointer hover:text-[#5885ff] font-bold">購買紀錄 </li>
                         </RouterLink>
-                        <li class="py-2 hover:bg-[#dddddd] text-sm pl-6 cursor-pointer hover:text-[#5885ff] font-bold" @click="logout">登出</li>
+                        <li :key="$route.fullPath" class="py-2 hover:bg-[#dddddd] text-sm pl-6 cursor-pointer hover:text-[#5885ff] font-bold" @click="logout">登出</li>
                     </ul>
                 </div>
             </div>

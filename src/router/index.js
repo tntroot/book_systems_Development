@@ -8,6 +8,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/space',
+      name: 'Space',
+      component: () => import('../views/Space.vue')
+    },
+    {
       path: '/',
       name: 'home',
       component: HomeView,

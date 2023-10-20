@@ -27,6 +27,9 @@ export default defineStore("indexStatus",{
     //     locationInfo:(state)=>{ return `現在的位置是: ${state.location}`}
     // }
     ,
+    getters:{
+        accountt:(account)=>account
+    },
 
     // methods
     // 有 this
