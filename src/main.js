@@ -18,39 +18,65 @@ const app = createApp(App)
 
 
   
-  router.beforeEach((to,from,next)=>{
-    if(to.meta.headerLogin){
-      axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
-      .then( res => res.data )
-      .then( data =>{
-        if(data.code === "200"){
-            defineStore().setISLogin(true,data.userShows.account);
-            next();
-        }else{
-            defineStore().setISLogin(false,"");
-            next();
-        }
-      })
-    }else{
-      next();
-    }
-  })
+  // router.beforeEach((to,from,next)=>{
+  //   if(to.meta.headerLogin){
+  //     axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
+  //     .then( res => res.data )
+  //     .then( data =>{
+  //       if(data.code === "200"){
+  //           defineStore().setISLogin(true,data.userShows.account);
+  //           to.query={user_name:data.userShows.account,user_date:data.userShows}
+  //           next();
+  //       }else{
+  //           defineStore().setISLogin(false,"");
+  //           next();
+  //       }
+  //     })
+  //   }else{
+  //     next();
+  //   }
+  // })
+
+  // router.beforeEach((to,from,next)=>{
+  //   if(to.meta.requiresAuth){
+  //     axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
+  //     .then( res => res.data )
+  //     .then( data =>{
+  //       if(data.code === "200"){
+  //         next();
+  //       }else{
+  //         alert("請先登入");
+  //         next("/login")
+  //       }
+  //     })
+  //   }else{
+  //     next();
+  //   }
+  // })
 
   router.beforeEach((to,from,next)=>{
-    if(to.meta.requiresAuth){
-      axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
+    axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
       .then( res => res.data )
       .then( data =>{
         if(data.code === "200"){
-          next();
+          to.query={user_data:data.userShows};
+          if(to.meta.headerLogin){
+            defineStore().setISLogin(true,data.userShows.account);
+            next();
+          }else{
+            next();
+          }
         }else{
-          alert("請先登入");
-          next("/login")
+          defineStore().setISLogin(false,"");
+          if(to.path == '/setting' || to.meta.requiresAuth){
+            alert("請先登入");
+            next("/login")
+          }
+          else{
+            next();
+          }
         }
       })
-    }else{
-      next();
-    }
   })
 
 const pinia = createPinia();

@@ -18,20 +18,20 @@ export default {
                         <div class="flex mb-6 flex-wrap">
                             <div class="mr-14">
                                 <label for="isbn">ISBN</label>
-                                <input id="isbn" class="search" type="text">
+                                <input id="isbn" class="search" type="text" autocomplete="on">
                             </div>
                             <div class="mr-14">
                                 <label for="book">書名</label>
-                                <input id="book" class="search" type="text">
+                                <input id="book" class="search" type="text" autocomplete="on">
                             </div>
                             <div class="mr-14">
                                 <label for="name">作者</label>
-                                <input id="name" class="search" type="text">
+                                <input id="name" class="search" type="text" autocomplete="on">
                             </div>
                             <div class="mr-14">
                                 <label for="stock" class="block">庫存量</label>
                                 <div class="flex">
-                                    <select class="p-1 border-gray-400 border-2 outline-none rounded-lg mr-1" name="" id="">
+                                    <select class="p-1 border-gray-400 border-2 outline-none rounded-lg mr-1" id="compare">
                                         <option value=">">大於</option>
                                         <option value="<">小於</option>
                                     </select>
@@ -42,7 +42,7 @@ export default {
                         
                         <div class="mr-14">
                             <label for="tag">分類</label>
-                            <input class="search w-[80%]" type="text">
+                            <input id="tag" class="search w-[80%]" type="text">
                         </div>
                         <div class="flex justify-end mt-6">
                             <button type="button" class="innsert_search_btn bg-[gray]">新增</button>

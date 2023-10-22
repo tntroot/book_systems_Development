@@ -123,7 +123,7 @@ export default {
 
                             <!-- 地區 select -->
                             <div class="mr-14">
-                                <label for="jobArea">地區</label>
+                                <p>地區</p>
                                 <div id="jobArea" class=" relative bg-gray-50 border border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer" 
                                     @mousemove="search.suCity.mapShow = true" @mouseleave="search.suCity.mapShow=false">
                                     <div class="flex items-center justify-evenly m-2.5">

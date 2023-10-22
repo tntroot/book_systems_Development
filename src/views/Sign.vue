@@ -18,6 +18,8 @@ export default {
             account:"",
             passwork:"",repasswork:"",pa_repa:false,
 
+            passwork_eye:true,repasswork_eye:true,
+
             verify:true,   // 驗證
 
             /** * @param {text} verify_text 輸入產生的驗證碼 */
@@ -140,13 +142,20 @@ export default {
                     </div>
                     <div class="mb-4">
                         <label for="Passwork" class="block text-xl">密碼</label>
-                        <input id="Passwork" type="password" placeholder="密碼" class="p-3 rounded-lg w-[25rem]" required v-model="passwork">
+                        <div class="relative">
+                            <input id="Passwork" :type="passwork_eye ? 'password':'text'" placeholder="密碼" class="py-3 pl-6 rounded-lg w-[25rem] pr-20" required v-model="passwork" autocomplete="off">
+                            <Icon :icon="passwork_eye ? 'mdi:eye-off':'mdi:eye'" class=" absolute right-3 text-3xl top-[50%] -translate-y-[50%] cursor-pointer active:scale-90 hover:scale-110" @click="passwork_eye = !passwork_eye" />
+                        </div>
+                        
                         <p class="text-red-600 text-xl">(請輸入 8~16位密碼，</p>
                         <p class="text-red-600 text-xl">並包含 小寫字母、大寫字母、數字 各一個)</p>
                     </div>
                     <div class="mb-4">
                         <label for="RePasswork" class="block text-xl">確認密碼</label>
-                        <input id="RePasswork" type="password" placeholder="密碼" class="p-3 rounded-lg w-[25rem]" required v-model="repasswork">
+                        <div class=" relative">
+                            <input id="RePasswork" :type="repasswork_eye ? 'password':'text'" placeholder="密碼" class="py-3 pl-6 rounded-lg w-[25rem] pr-20" required v-model="repasswork" autocomplete="off">
+                            <Icon :icon="repasswork_eye ? 'mdi:eye-off':'mdi:eye'" class=" absolute right-3 text-3xl top-[50%] -translate-y-[50%] cursor-pointer active:scale-90 hover:scale-110" @click="repasswork_eye = !repasswork_eye" />
+                        </div>
                         <p v-if="pa_repa" class="text-red-600 text-xl">密碼與確認密碼不一致</p>
                     </div>
                 </div>

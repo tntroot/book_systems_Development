@@ -3,6 +3,14 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
     components:{
         RouterView,RouterLink
+    },
+    data() {
+        return {
+            manager:this.$route.query.user_data.manager
+        }
+    },
+    mounted(){
+        
     }
 }
 </script>
@@ -17,7 +25,7 @@ export default {
             </RouterLink>
 
             <!-- 僅管理者使用 -->
-            <div class="accordion-item">
+            <div class="accordion-item" v-if="manager<=1">
                 <h2 class="accordion-header" id="headingThree">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                         <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto space">
@@ -25,7 +33,7 @@ export default {
                         </div>
                     </button>
                 </h2>
-                <RouterLink to="/setting/staff" class=" hover:scale-105 active:scale-95">
+                <RouterLink to="/setting/staff" class=" hover:scale-105 active:scale-95" v-if="manager===0">
                     <div id="collapseThree" class="accordion show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
@@ -34,7 +42,7 @@ export default {
                         </div>
                     </div>
                 </RouterLink>
-                <RouterLink to="/setting/client" class=" hover:scale-105 active:scale-95">
+                <RouterLink to="/setting/client" class=" hover:scale-105 active:scale-95" v-if="manager<=1">
                     <div id="collapseThree" class="accordion show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
                             <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
@@ -53,7 +61,7 @@ export default {
             </RouterLink>
 
             <!-- 僅員工使用 -->
-            <div class="accordion-item">
+            <div class="accordion-item" v-if="manager<=1">
                 <h2 class="accordion-header" id="headingFour">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                         <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto space">

@@ -16,13 +16,15 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta:{headerLogin: true}
+      meta:{headerLogin: true},
+      props:true
     },
     {
       path: '/search',
       name: 'Search',
       component: () => import('../views/Search.vue'),
-      meta:{headerLogin: true}
+      meta:{headerLogin: true},
+      props:true
     },
     {
       path: '/login',
@@ -47,6 +49,7 @@ const router = createRouter({
         requiresAuth: true,
         headerLogin: true
       },
+      props:true,
       children:[
         // 通用
         {

@@ -56,7 +56,7 @@ export default {
             <h1 class="text-3xl mx-6 font-bold">圖書管理系統</h1>
         </RouterLink>
         <div class=" w-fit relative">
-            <input class="pr-14 text-xl p-3 rounded-full w-[25rem]" type="text">
+            <input id="search" class="pr-14 text-xl p-3 rounded-full w-[25rem]" type="text">
             <RouterLink to="/search" >
                 <Icon icon="flat-color-icons:search" width="35" class=" cursor-pointer absolute top-3 right-4 hover:scale-105 active:scale-95"/>
             </RouterLink>        

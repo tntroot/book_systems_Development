@@ -20,17 +20,13 @@ export default {
         seetting(){
 
             const thisdate=new Date();  // 現在時間
+            const user_data = this.$route.query.user_data;
 
-            axios.get("http://localhost:8080/book_systems/getBalance",{withCredentials:true})
-            .then(res => res.data)
-            .then( data =>{
-                if(data.code==="200"){
-                    this.Account = data.userShows.account;
-                    this.name=data.userShows.user_name;
-                    this.email=data.userShows.email;
-                    this.born=data.userShows.born.split('T')[0];
-                }
-            })
+            this.Account = user_data.account;
+            this.name=user_data.user_name;
+            this.email=user_data.email;
+            this.born=user_data.born.split('T')[0];
+
 
             this.minYear=eval(thisdate.getFullYear()+"-100")+"-01-01";
             // this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
@@ -49,9 +45,7 @@ export default {
         }
     },
     mounted(){
-        this.seetting();
-        console.log(this.maxYear);
-        
+        this.seetting();     
     }
     
 }
@@ -73,13 +67,13 @@ export default {
             </div>
             <div class="mx-6">
                 <label for="Name" class="block text-xl text-bold">姓名</label>
-                <input id="Name" type="text" class="p-2 rounded-lg border-2 border-gray-300" v-model="name">
+                <input id="Name" type="text" class="p-2 rounded-lg border-2 border-gray-300" v-model="name" autocomplete="on">
             </div>
         </div>
         <div class="flex mb-3">
             <div class="mx-6">
                 <label for="Email" class="block text-xl text-bold">信箱</label>
-                <input id="Email" type="email" class="p-2 rounded-lg border-2 border-gray-300" v-model="email" disabled>
+                <input id="Email" type="email" class="p-2 rounded-lg border-2 border-gray-300" v-model="email" disabled autocomplete="off">
                 <div class="text-blue-600 hover:text-red-600 active:scale-95 cursor-pointer text-xl inline-block ml-3">修改</div>
             </div>
             <div class="mx-6">
