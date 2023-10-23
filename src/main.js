@@ -77,6 +77,10 @@ const app = createApp(App)
           }
         }
       })
+      .catch(err =>{
+        console.log(err);
+        next();
+      })
   })
 
 const pinia = createPinia();
