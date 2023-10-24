@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios';
-import { RouterLink, RouterView } from 'vue-router'
-import Identify from '../components/Identify.vue'
+import { RouterLink, RouterView } from 'vue-router';
+import Identify from '../components/Identify.vue';
 export default {
     components:{
         RouterView,RouterLink,Identify,
@@ -63,8 +63,8 @@ export default {
     <div class="login">
         <form class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col" @submit.prevent="login">
             <div>
-                <Icon icon="emojione:books" width="100" class="mx-auto" />
-                <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
+                <Icon icon="emojione:shopping-bags" width="100" class="mx-auto" />
+                <h1 class="text-3xl py-6 text-center">書海經</h1>
             </div>
             <div class="mb-4">
                 <label for="Account" class="block text-xl">帳號</label>

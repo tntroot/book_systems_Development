@@ -24,8 +24,10 @@ export default {
 
             /** * @param {text} verify_text 輸入產生的驗證碼 */
             verify_text:null,
+
             /** * @param {text} verify_TF 驗證碼輸入錯誤顯示的文字 */
             verify_TF:false,
+            
             /** * @param {text} verify_num 隨機驗證碼  */
             verify_num:null,
 
@@ -111,8 +113,8 @@ export default {
     <form v-if="verify" action="" method="get" @submit.prevent="sign()" class="w-fix mx-auto">
         <div class="bg-[#bcbcbc]  p-12 font-bold">
             <div class="mx-auto">
-                <Icon icon="emojione:books" width="100" class="mx-auto" />
-                <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
+                <Icon icon="emojione:shopping-bags" width="100" class="mx-auto" />
+                <h1 class="text-3xl py-6 text-center">書海經</h1>
             </div>
             <div class="flex justify-evenly">
                 <div class="mx-3">
@@ -165,10 +167,10 @@ export default {
         </div>   
     </form>
 
-    <div v-else class="w-fix mx-auto flex flex-col items-center ">
+    <div v-else class="w-fix mx-auto flex flex-col items-center mt-12">
         <div class="mx-auto ">
-            <Icon icon="emojione:books" width="100" class="mx-auto" />
-            <h1 class="text-3xl py-6 text-center">圖書管理系統</h1>
+            <Icon icon="emojione:shopping-bags" width="100" class="mx-auto" />
+            <h1 class="text-3xl py-6 text-center">書海經</h1>
         </div>
         <!-- <div v-if="verify_email">
             <p class="my-6 text-xl">已將驗證碼發送到你的郵件，請確認你信箱中的驗證碼</p>

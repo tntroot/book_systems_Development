@@ -18,11 +18,32 @@ export default {
 
             avatar:"../../../public/people.png",
 
+            /**
+             * @param {boolean} editPwd 呼出修改密碼介面
+             * @param {boolean} editPwdCheck 驗證密碼是否修改成功介面
+             */
             editPwdPage:{
                 editPwd:false,
                 editPwdCheck:false,
-                bgc:false
-            }
+
+                passwork_eye:true,
+                repasswork_eye:true
+            },
+
+            /**
+             * @param {string} text 修改成功/修改失敗
+             * @param {string} meesage 訊息
+             * @param {string} icon icon
+             * @param {string} icon_style icon 樣式
+             */
+            editStatus:{
+                text:"",
+                meesage:"",
+                icon:"",
+                icon_style:""
+            },
+
+            bgc:false
         }
     },
     methods:{
@@ -78,6 +99,7 @@ export default {
 
             if(checkNewPwd !== newPwd){
                 alert("新密碼與確認密碼不一致");
+                return;
             }
 
             axios.post("http://localhost:8080/book_systems/setting/editPwd",{
@@ -85,13 +107,33 @@ export default {
                 "newPwd":newPwd,
 
                 "account":this.Account
-            })
+            },{withCredentials:true})
             .then( res => res.data)
             .then( data =>{
+
+                this.editPwdPage.editPwdCheck = true;
+                this.editPwdPage.editPwd = false;
+
                 if(data.code === "200" ){
-                    alert('成功修改');
+
+                    this.editStatus = {
+                        text:"修改成功",
+                        meesage:"",
+                        icon:"icon-park-solid:check-one",
+                        icon_style:"text-[green]"
+                    }
+
+                    setTimeout(() => {
+                        this.editPwdPage.editPwdCheck = false;
+                        this.bgc = false;
+                    }, "1000");
                 }else{
-                    alert(data.message);
+                    this.editStatus = {
+                        text:"修改失敗",
+                        meesage:data.message,
+                        icon:"fluent-mdl2:status-error-full",
+                        icon_style:"text-[red]"
+                    }
                 }
             })
         },
@@ -146,7 +188,7 @@ export default {
         <div class="mx-6">
             <label for="pwd" class="block text-xl text-bold">密碼</label>
             <input id="pwd" type="password" class="p-2 rounded-lg border-2 border-gray-300" v-model="passwork" disabled autocomplete="off">
-            <div class="text-blue-600 hover:text-red-600 active:scale-95 cursor-pointer text-xl inline-block ml-3" @click="editPwdPage.editPwd = true,editPwdPage.bgc = true">修改</div>
+            <div class="text-blue-600 hover:text-red-600 active:scale-95 cursor-pointer text-xl inline-block ml-3" @click="editPwdPage.editPwd = true,bgc = true">修改</div>
         </div>
         <button type="button" class="px-14 py-3 mt-6 text-white bg-gray-500 mx-auto rounded-xl text-xl font-bold block hover:scale-105 active:scale-95" @click="editUser">儲存</button>
     </form>
@@ -158,40 +200,48 @@ export default {
             <ul class=" editContent">
                 <li>
                     <label for="oldPwd">舊密碼: </label>
-                    <div>
+                    <div class="inputdiv">
                         <input id="oldPwd" type="text" placeholder="請輸入舊密碼"  required>
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd">新密碼: </label>
+                    <div class="inputdiv">
+                        <input id="newPwd" :type="editPwdPage.passwork_eye ? 'password':'text'" placeholder="請輸入新密碼"  required>
+                        <Icon :icon="editPwdPage.passwork_eye ? 'mdi:eye-off':'mdi:eye'" class=" absolute -right-10 text-3xl top-[50%] -translate-y-[50%] cursor-pointer active:scale-90 hover:scale-110" @click="editPwdPage.passwork_eye = !editPwdPage.passwork_eye" />
+                    </div> 
+                </li>
+                <li>
                     <div>
-                        <input id="newPwd" type="text" placeholder="請輸入新密碼"  required>
-                    </div>      
+                        <p class="text-red-600 text-xl -mt-2">(請輸入 8~16位密碼，並包含</p>
+                        <p class="text-red-600 text-xl -mt-2"> 小寫字母、大寫字母、數字 各一個)</p> 
+                    </div> 
                 </li>
                 <li>  
                     <label for="checkNewPwd">確認密碼: </label>
-                    <div>
-                        <input id="checkNewPwd" type="text" placeholder="請輸入確認密碼" required>
+                    <div class="inputdiv">
+                        <input id="checkNewPwd" :type="editPwdPage.repasswork_eye ? 'password':'text'" placeholder="請輸入確認密碼" required>
+                        <Icon :icon="editPwdPage.repasswork_eye ? 'mdi:eye-off':'mdi:eye'" class=" absolute -right-10 text-3xl top-[50%] -translate-y-[50%] cursor-pointer active:scale-90 hover:scale-110" @click="editPwdPage.repasswork_eye = !editPwdPage.repasswork_eye" />
                     </div>
                 </li>
             </ul>
             <div class="flex justify-evenly">
-                <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="editPwdPage.bgc=false,editPwdPage.editPwd=false">取消</button>
+                <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="bgc=false,editPwdPage.editPwd=false">取消</button>
                 <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95">修改</button>
             </div>
         </form>
     </div>
 
     <!-- 修改成功 -->
-    <div v-if="editPwdPage.editPwdCheck" class="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#FFFFFF] border-[black] border py-6 px-32 rounded-2xl z-10">
+    <div v-else-if="editPwdPage.editPwdCheck" class="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#FFFFFF] border-[black] border py-6 px-32 rounded-2xl z-10">
         <h1 class="text-center text-3xl font-bold my-3">{{ editStatus.text }}</h1>
         <p class="text-center text-3xl my-3 text-[red]">{{ editStatus.meesage }}</p>
         <Icon :icon="editStatus.icon" :class="'my-6 mx-auto '+ editStatus.icon_style" width="120" />
-        <button v-if="editStatus.text==='修改失敗'" type="button" class="block mx-auto my-3 py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="editPwdCheck=false,bgc=false">確定</button>
+        <button v-if="editStatus.text==='修改失敗'" type="button" class="block mx-auto my-3 py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="editPwdPage.editPwdCheck=false,bgc=false">確定</button>
     </div>
 
     <!-- 背景 -->
-    <div v-if="editPwdPage.bgc" class="fixed top-0 left-0 w-full h-[100vh] bg-[#00000083] z-0" @click="editPwdPage.bgc=false,editPwdPage.editPwd=false,editPwdPage.editPwdCheck=false"></div>
+    <div v-if="bgc" class="fixed top-0 left-0 w-full h-[100vh] bg-[#00000083] z-0" @click="bgc=false,editPwdPage.editPwd=false,editPwdPage.editPwdCheck=false"></div>
 </template>
 
 <style lang="scss">
@@ -240,6 +290,7 @@ export default {
         li{
             display: flex;
             align-items: center;
+            justify-content: center;
             margin: 1rem 0;
             font-weight: 700;
             font-size: 1.25rem;
@@ -248,13 +299,14 @@ export default {
             label{
                 margin-right: 0.75rem;
             }
-            div{
+            .inputdiv{
+                position: relative;
                 background-color: #b7b7b7;
                 border-radius: 0.25rem;
                 padding: 0.5rem 0.75rem;
                 margin: 0 0.5rem;
 
-                input[type="text"]{
+                input[type="text"],input[type="password"]{
                     border-bottom: 1px #757575 solid;
                     outline: none;
                     background-color: transparent;

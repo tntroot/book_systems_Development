@@ -43,6 +43,8 @@ export default {
         }
     },
     methods:{
+
+        // 查詢地區
         changeMap(item){
             this.search.suCity={
                 mapShow:false,
@@ -52,6 +54,7 @@ export default {
             }
         },
 
+        // 新增/修改葉面 地區
         changeMapInsertAndUpdate(item){
             this.location_name = {
                 mapShow:false,
@@ -61,6 +64,7 @@ export default {
             }
         },
 
+        // 查詢功能
         searchSupplier(name, complied, lo_id){
             axios.get("http://localhost:8080/book_systems/supplier/search/supplier",{  
                 params:{
@@ -77,6 +81,11 @@ export default {
                     this.showSupplier = arr.suppliers;
                 }
             })
+        },
+
+        // 新增功能
+        insertData(){
+
         },
 
         clossPage(){
@@ -224,21 +233,22 @@ export default {
                 <li>  
                     <label for="location">地　　址: </label>
                     <div>
-                        <div id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1" >
-                            <div class="flex items-center justify-evenly m-2.5" @click="location_name.mapShow = !location_name.mapShow">
+                        <button type="button" id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1 group" >
+                            <div class="flex items-center justify-evenly m-2.5" >
+                                <!-- @click="location_name.mapShow = !location_name.mapShow" -->
                                 <p>{{ location_name.jobArea }}</p>
                                 <Icon icon="iconamoon:arrow-down-2-bold" width="20" />
                             </div>
-                            <div v-if="location_name.mapShow" class="mapAndPriceSelect shadow-xl">
+                            <div tabindex="0" class="mapAndPriceSelect shadow-xl scale-0 group-focus-within:scale-100">
                                 <div v-for="(item, index) in location_name.showAllMap"
-                                    class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white"
+                                    class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white group-active:first-letter:scale-0"
                                     @click="changeMapInsertAndUpdate(item);">
                                     <input type="radio" :id="'showMap' + index" name="thismap" class="mr-3 cursor-pointer" :value="item.location_id"
                                         :checked="location_name.jobArea === item.location_name">
                                     <label :for="'showMap' + index" class="cursor-pointer">{{ item.location_name }}</label>
                                 </div>
                             </div>
-                        </div>
+                        </button>
                         <div class="bgc">
                             <input id="location" type="email" v-model="insert.data.location_name" placeholder="請輸入詳細地址" required>
                         </div>    
@@ -247,7 +257,7 @@ export default {
             </ul>
             <div class="flex justify-evenly mb-6">
                 <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="clossPage">取消</button>
-                <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95">新增</button>
+                <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="insertData">新增</button>
             </div>
         </form>
     </div>

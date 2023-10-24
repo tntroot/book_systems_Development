@@ -52,8 +52,8 @@ export default {
 <template>
     <header class="bg-[gray] p-6 flex justify-evenly items-center">
         <RouterLink to="/" class="flex items-center hover:scale-105 active:scale-95 cursor-pointer">
-            <Icon icon="emojione:books" width="50" class="mx-auto" />
-            <h1 class="text-3xl mx-6 font-bold">圖書管理系統</h1>
+            <Icon icon="emojione:shopping-bags" width="50" class="mx-auto" />
+            <h1 class="text-3xl mx-6 font-bold">書海經</h1>
         </RouterLink>
         <div class=" w-fit relative">
             <input id="search" class="pr-14 text-xl p-3 rounded-full w-[25rem]" type="text">

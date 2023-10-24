@@ -42,6 +42,11 @@ const router = createRouter({
       component: () => import('../views/Forget_Passwork.vue')
     },
     {
+      path: '/forgeteditnewpwd',
+      name: 'ForgetEditNewPwd',
+      component: () => import('../views/Forget_EditNewPwd.vue')
+    },
+    {
       path: '/setting',
       name: 'Settig',
       component: () => import('../views/Setting.vue'),
