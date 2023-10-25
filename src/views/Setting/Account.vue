@@ -1,158 +1,143 @@
 <script>
 import axios from 'axios';
+import SuffcusOrError from '../../components/SuffcusOrError.vue';
+import Bgc from '../../components/Bgc.vue';
 export default {
     data() {
         return {
-
-            thisUserData:"",
-
+            thisUserData: "",
             Account: "",
-            born:null,    // 生日
-            email:"",   
-            name:"",
-            passwork:"********",
-            redate:"" ,   // 註冊日期
-
-            minYear: "",   // 設定最大/最小生日
-            maxYear:"",
-
-            avatar:"../../../public/people.png",
-
+            born: null,
+            email: "",
+            name: "",
+            passwork: "********",
+            redate: "",
+            minYear: "",
+            maxYear: "",
+            avatar: "../../../public/people.png",
             /**
              * @param {boolean} editPwd 呼出修改密碼介面
              * @param {boolean} editPwdCheck 驗證密碼是否修改成功介面
              */
-            editPwdPage:{
-                editPwd:false,
-                editPwdCheck:false,
-
-                passwork_eye:true,
-                repasswork_eye:true
+            editPwdPage: {
+                editPwd: false,
+                editPwdCheck: false,
+                passwork_eye: true,
+                repasswork_eye: true
             },
-
             /**
              * @param {string} text 修改成功/修改失敗
              * @param {string} meesage 訊息
              * @param {string} icon icon
              * @param {string} icon_style icon 樣式
              */
-            editStatus:{
-                text:"",
-                meesage:"",
-                icon:"",
-                icon_style:""
+            editStatus: {
+                text: "",
+                message: "",
+                icon: "",
+                icon_style: ""
             },
-
-            bgc:false
-        }
+            bgc: false
+        };
     },
-    methods:{
-        seetting(){
-
-            const thisdate=new Date();  // 現在時間
+    methods: {
+        seetting() {
+            const thisdate = new Date(); // 現在時間
             const user_data = this.$route.query.user_data;
-
             this.Account = user_data.account;
-            this.name=user_data.user_name;
-            this.email=user_data.email;
-            this.born=user_data.born.split('T')[0];
-
-
-            this.minYear=eval(thisdate.getFullYear()+"-100")+"-01-01";
+            this.name = user_data.user_name;
+            this.email = user_data.email;
+            this.born = user_data.born.split('T')[0];
+            this.minYear = eval(thisdate.getFullYear() + "-100") + "-01-01";
             // this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
             this.maxYear = thisdate.toLocaleString('sv').split(' ')[0];
-
             this.thisUserData = user_data.manager;
-
         },
-
-        editUser(){
+        editUser() {
             const thisBorn = new Date(this.born);
             const thisMaxYear = new Date(this.maxYear);
-            if(!this.born || !this.name){
+            if (!this.born || !this.name) {
                 alert("尚有欄位未輸入");
-            }else if(thisBorn > thisMaxYear){
-                alert("生日不可大於今天日期",eval(thisMaxYear-thisBorn))
-            }else{
-
-                axios.post("http://localhost:8080/book_systems/setting/editUser",{
-                    "user_name":this.name,   
-                    "born":this.born, 
-
-                    "account":this.Account 
-                },{withCredentials:true})
-                .then( res => res.data)
-                .then( data =>{
-                    if(data.code === "200" ){
+            }
+            else if (thisBorn > thisMaxYear) {
+                alert("生日不可大於今天日期", eval(thisMaxYear - thisBorn));
+            }
+            else {
+                axios.post("http://localhost:8080/book_systems/setting/editUser", {
+                    "user_name": this.name,
+                    "born": this.born,
+                    "account": this.Account
+                }, { withCredentials: true })
+                    .then(res => res.data)
+                    .then(data => {
+                    if (data.code === "200") {
                         alert('成功修改');
-                    }else{
+                    }
+                    else {
                         alert(data.message);
                     }
-                })
+                });
             }
         },
-
-        editCheck(){
+        editCheck() {
             const oldPwd = document.getElementById("oldPwd").value;
             const newPwd = document.getElementById("newPwd").value;
             const checkNewPwd = document.getElementById("checkNewPwd").value;
-
-            if(checkNewPwd !== newPwd){
+            if (checkNewPwd !== newPwd) {
                 alert("新密碼與確認密碼不一致");
                 return;
             }
-
-            axios.post("http://localhost:8080/book_systems/setting/editPwd",{
-                "oldPwd":oldPwd,
-                "newPwd":newPwd,
-
-                "account":this.Account
-            },{withCredentials:true})
-            .then( res => res.data)
-            .then( data =>{
-
+            axios.post("http://localhost:8080/book_systems/setting/editPwd", {
+                "oldPwd": oldPwd,
+                "newPwd": newPwd,
+                "account": this.Account
+            }, { withCredentials: true })
+                .then(res => res.data)
+                .then(data => {
                 this.editPwdPage.editPwdCheck = true;
                 this.editPwdPage.editPwd = false;
-
-                if(data.code === "200" ){
-
+                if (data.code === "200") {
                     this.editStatus = {
-                        text:"修改成功",
-                        meesage:"",
-                        icon:"icon-park-solid:check-one",
-                        icon_style:"text-[green]"
-                    }
-
+                        text: "修改成功",
+                        meesage: "",
+                        icon: "icon-park-solid:check-one",
+                        icon_style: "text-[green]"
+                    };
                     setTimeout(() => {
                         this.editPwdPage.editPwdCheck = false;
                         this.bgc = false;
                     }, "1000");
-                }else{
-                    this.editStatus = {
-                        text:"修改失敗",
-                        meesage:data.message,
-                        icon:"fluent-mdl2:status-error-full",
-                        icon_style:"text-[red]"
-                    }
                 }
-            })
+                else {
+                    this.editStatus = {
+                        text: "修改失敗",
+                        meesage: data.message,
+                        icon: "fluent-mdl2:status-error-full",
+                        icon_style: "text-[red]"
+                    };
+                }
+            });
         },
 
-        handleFile(e){
-            const file=e.target.files[0];
+        getBgc(item){
+            this.bgc = item;
+            this.editPwdPage.editPwdCheck = item;
+        },
+
+        handleFile(e) {
+            const file = e.target.files[0];
             const reader = new FileReader();
             reader.readAsDataURL(file);
-
-            reader.onload=(e) =>{
+            reader.onload = (e) => {
                 console.log(e.target.result);
-                this.avatar=e.target.result;
-            }
+                this.avatar = e.target.result;
+            };
         }
     },
-    mounted(){
-        this.seetting();     
-    }
-    
+    mounted() {
+        this.seetting();
+    },
+    components: { SuffcusOrError, Bgc }
 }
 </script>
 <template>
@@ -233,15 +218,10 @@ export default {
     </div>
 
     <!-- 修改成功 -->
-    <div v-else-if="editPwdPage.editPwdCheck" class="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#FFFFFF] border-[black] border py-6 px-32 rounded-2xl z-10">
-        <h1 class="text-center text-3xl font-bold my-3">{{ editStatus.text }}</h1>
-        <p class="text-center text-3xl my-3 text-[red]">{{ editStatus.meesage }}</p>
-        <Icon :icon="editStatus.icon" :class="'my-6 mx-auto '+ editStatus.icon_style" width="120" />
-        <button v-if="editStatus.text==='修改失敗'" type="button" class="block mx-auto my-3 py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="editPwdPage.editPwdCheck=false,bgc=false">確定</button>
-    </div>
+    <SuffcusOrError v-else-if="editPwdPage.editPwdCheck" :text="editStatus.text" :message="editStatus.message" :icon="editStatus.icon" :icon_style="editStatus.icon_style" @bgc="getBgc" />
 
     <!-- 背景 -->
-    <div v-if="bgc" class="fixed top-0 left-0 w-full h-[100vh] bg-[#00000083] z-0" @click="bgc=false,editPwdPage.editPwd=false,editPwdPage.editPwdCheck=false"></div>
+    <Bgc v-if="bgc" @click="editPwdPage.editPwdCheck = false, bgc = false, editPwdPage.editPwd=false" />
 </template>
 
 <style lang="scss">

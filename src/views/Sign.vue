@@ -68,7 +68,7 @@ export default {
                     email:this.email, 
                     pwd:this.passwork, 
                     born:this.bron, 
-                    redate:this.redate
+                    redate:this.redate.toLocaleString('sv')
                 },{withCredentials: true})
                 .then( res =>{
 

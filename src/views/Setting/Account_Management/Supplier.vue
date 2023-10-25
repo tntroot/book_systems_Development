@@ -1,9 +1,11 @@
 <script>
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
+import Bgc from '../../../components/Bgc.vue';
+import SuffcusOrError from '../../../components/SuffcusOrError.vue';
 export default {
     components:{
-        Icon,
+    Icon, Bgc,SuffcusOrError
     },
     data() {
         return {
@@ -11,8 +13,8 @@ export default {
             location_name:{
                 mapShow:false,
                 showAllMap:[],
-                jobArea: "地區不限",
-                thisMapId: ""
+                jobArea: "台北市",
+                thisMapId: "A"
             },
 
             search:{
@@ -36,8 +38,30 @@ export default {
                     compiled:"",
                     email:"", 
                     phone:"", 
+                    location_name:"",
                 }
             },
+
+            edit:{
+                thisPage:false,
+
+                data:{
+                    name:"",
+                    compiled:"",
+                    email:"", 
+                    phone:"", 
+                    location_name:"",
+                }
+            },
+
+            editStatus: {
+                page:false,
+                text: "",
+                message: "",
+                icon: "",
+                icon_style: ""
+            },
+
             bgPage:false,
            
         }
@@ -83,14 +107,98 @@ export default {
             })
         },
 
+
+        checkLocalName(loc,thisinsert1){
+
+            Object.values(loc).forEach((item)=>{
+                if(item.location_name === thisinsert1.location_name.slice(0,3)){
+                    return thisinsert1.location_name.slice(0,3);
+                }
+            })
+            return "";
+        },
         // 新增功能
         insertData(){
 
+            let thisinsert = this.insert.data;
+            let loc = "";     
+
+            if(!thisinsert.name || !thisinsert.compiled 
+                || !thisinsert.email || !thisinsert.phone 
+                || !this.location_name.thisMapId 
+                || !thisinsert.location_name){
+                    alert("尚有欄位未輸入");
+                }else if(this.location_name.jobArea !== this.checkLocalName(this.location_name.showAllMap,thisinsert)){
+                    alert("詳細地址與縣市地址不同");
+                }else{
+                    axios.post("http://localhost:8080/book_systems/supplier/add/supplier",{
+                        "name":thisinsert.name, 
+                        "compiled":thisinsert.compiled, 
+                        "email":thisinsert.email, 
+                        "phone":thisinsert.phone, 
+                        "location_id":this.location_name.thisMapId, 
+                        "location_name":thisinsert.location_name
+                    })
+                    .then( res => res.data)
+                    .then(data =>{
+                        
+                        this.insert.thisPage = false;
+                        if(data.code === "200"){
+                            this.editStatus = {
+                                page : true,
+                                text: "新增成功",
+                                message: "",
+                                icon: "icon-park-solid:check-one",
+                                icon_style: "text-[green]"
+                            };
+                            setTimeout(() => {
+                                this.editStatus.page = false;
+                                this.bgPage = false;
+
+                                this.searchSupplier("",0,"");
+                            }, "2000");
+                        }
+                        else {
+                            this.editStatus = {
+                                text: "新增失敗",
+                                page : true,
+                                message: data.message,
+                                icon: "fluent-mdl2:status-error-full",
+                                icon_style: "text-[red]"
+                            };
+                        }
+                    })
+                }
         },
 
+        editBtn(item){
+            this.bgPage = true;
+            this.edit = {
+                thisPage:true,
+
+                data:{
+                    name:item.name,
+                    compiled:item.compiled,
+                    email:item.email, 
+                    phone:item.phone, 
+                    location_name:item.location_name
+                }
+            };
+            this.location_name.jobArea = item.location_name.slice(0,3);
+        },
+
+        // 點籍取消/背景效果
         clossPage(){
             this.insert.thisPage=false;
+            this.edit.thisPage = false;
+            this.editStatus.page=false;
             this.bgPage=false;
+        },
+
+        getBgc(item){
+            this.insert.thisPage=item;
+            this.editStatus.page=item;
+            this.bgPage=item;
         },
     },
     created(){
@@ -104,7 +212,7 @@ export default {
             });
         
         this.searchSupplier("",0,"");
-    }
+    },
 }
 </script>
 <template>
@@ -177,7 +285,7 @@ export default {
                 <tbody>
                     <tr v-for="(item,index) in showSupplier" class="text-center ">
                         <td class="py-3">
-                            <button type="button" class="revise">修改</button>
+                            <button type="button" class="revise" @click="editBtn(item)">修改</button>
                         </td>
                         <td>{{ item.serial_num }}</td>
                         <td>{{ item.name }}</td>
@@ -202,8 +310,9 @@ export default {
         </div>
     </div>
   
-    <div v-show="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
-        <form action="#" method="post" @submit.prevent="editCheck">
+    <!-- 新增供應商 -->
+    <div v-if="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
+        <form action="#" method="post" @submit.prevent="insertData">
             <h1 class="text-center text-3xl font-bold my-6">新增供應商</h1>
             <ul class=" editContent">
                 <li>
@@ -227,19 +336,19 @@ export default {
                 <li>  
                     <label for="phone">電　　話: </label>
                     <div class="bgc">
-                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="tel">
+                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="on">
                     </div>
                 </li>
                 <li>  
                     <label for="location">地　　址: </label>
                     <div>
                         <button type="button" id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1 group" >
-                            <div class="flex items-center justify-evenly m-2.5" >
+                            <div class="flex items-center justify-evenly p-2.5" @click="location_name.mapShow = !location_name.mapShow">
                                 <!-- @click="location_name.mapShow = !location_name.mapShow" -->
                                 <p>{{ location_name.jobArea }}</p>
                                 <Icon icon="iconamoon:arrow-down-2-bold" width="20" />
                             </div>
-                            <div tabindex="0" class="mapAndPriceSelect shadow-xl scale-0 group-focus-within:scale-100">
+                            <div v-show="location_name.mapShow" tabindex="0" class="mapAndPriceSelect shadow-xl">
                                 <div v-for="(item, index) in location_name.showAllMap"
                                     class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white group-active:first-letter:scale-0"
                                     @click="changeMapInsertAndUpdate(item);">
@@ -250,20 +359,84 @@ export default {
                             </div>
                         </button>
                         <div class="bgc">
-                            <input id="location" type="email" v-model="insert.data.location_name" placeholder="請輸入詳細地址" required>
+                            <input id="location" type="text" v-model="insert.data.location_name" placeholder="請輸入詳細地址 (不含縣市)" required>
                         </div>    
                     </div>
                 </li>
             </ul>
             <div class="flex justify-evenly mb-6">
                 <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="clossPage">取消</button>
-                <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="insertData">新增</button>
+                <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95">新增</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 修改供應商 -->
+    <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
+        <form action="#" method="post" @submit.prevent="editData">
+            <h1 class="text-center text-3xl font-bold my-6">新增供應商</h1>
+            <ul class=" editContent">
+                <li>
+                    <label for="oldPwd2">廠商名稱: </label>
+                    <div class="bgc">
+                        <input id="oldPwd2" type="text" v-model="edit.data.name" placeholder="請輸入廠商名稱"  required>
+                    </div>         
+                </li>
+                <li>  
+                    <label for="newPwd2">統一編號: </label>
+                    <div class="bgc">
+                        <input id="newPwd2" type="number" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off">
+                    </div>      
+                </li>
+                <li>  
+                    <label for="email2">信　　箱: </label>
+                    <div class="bgc">
+                        <input id="email2" type="email" v-model="edit.data.email" placeholder="請輸入Email" required autocomplete="email">
+                    </div>
+                </li>
+                <li>  
+                    <label for="phone2">電　　話: </label>
+                    <div class="bgc">
+                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on">
+                    </div>
+                </li>
+                <li>  
+                    <label for="location">地　　址: </label>
+                    <div>
+                        <button type="button" id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1 group" >
+                            <div class="flex items-center justify-evenly p-2.5" @click="location_name.mapShow = !location_name.mapShow">
+                                <!-- @click="location_name.mapShow = !location_name.mapShow" -->
+                                <p>{{ location_name.jobArea }}</p>
+                                <Icon icon="iconamoon:arrow-down-2-bold" width="20" />
+                            </div>
+                            <div v-show="location_name.mapShow" tabindex="0" class="mapAndPriceSelect shadow-xl">
+                                <div v-for="(item, index) in location_name.showAllMap"
+                                    class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white"
+                                    @click="changeMapInsertAndUpdate(item);">
+                                    <input type="radio" :id="'showMap' + index" name="thismap" class="mr-3 cursor-pointer" :value="item.location_id"
+                                        :checked="location_name.jobArea === item.location_name">
+                                    <label :for="'showMap' + index" class="cursor-pointer">{{ item.location_name }}</label>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="bgc">
+                            <input type="text" v-model="edit.data.location_name" placeholder="請輸入詳細地址" required>
+                        </div>    
+                    </div>
+                </li>
+            </ul>
+            <div class="flex justify-evenly mb-6">
+                <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="clossPage">取消</button>
+                <button type="submit" class="py-3 px-6 bg-[#FF6E6E] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95">修改</button>
             </div>
         </form>
     </div>
     
-    <div v-show="bgPage" class="w-full h-screen bg-[#00000081] fixed top-0 left-0 z-0" @click="clossPage">
-    </div>
+    <!-- 修改成功 -->
+    <SuffcusOrError v-else-if="editStatus.page" :text="editStatus.text" :message="editStatus.message" :icon="editStatus.icon" :icon_style="editStatus.icon_style" @bgc="getBgc" />
+
+    <!-- 背景 -->
+    <Bgc v-if="bgPage" @click="clossPage" />
 </template>
 
 <style lang="scss" scoped>

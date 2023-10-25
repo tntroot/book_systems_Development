@@ -9,6 +9,9 @@ import defineStore from './store/store';
 import { createPinia } from "pinia";
 import axios from 'axios';
 
+import SuffcusOrErrorView from './components/SuffcusOrError.vue';
+import bgcView from './components/Bgc.vue';
+
 import "bootstrap"; // 從nodeModule中載入Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"; // Import css file
 
