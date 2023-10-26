@@ -35,7 +35,7 @@ export default {
 
                 data:{
                     name:"",
-                    compiled:"",
+                    compiled:0,
                     email:"", 
                     phone:"", 
                     location_name:"",
@@ -47,10 +47,12 @@ export default {
 
                 data:{
                     name:"",
-                    compiled:"",
+                    compiled:0,
                     email:"", 
                     phone:"", 
                     location_name:"",
+
+                    serial_num:""
                 }
             },
 
@@ -93,80 +95,119 @@ export default {
             axios.get("http://localhost:8080/book_systems/supplier/search/supplier",{  
                 params:{
                     name:name, 
-                    compiled:complied==="" ? 0:complied, 
+                    compiled:(complied==="" || complied<=0 ) ? 0:complied, 
                     city:lo_id 
                 },
                 withCredentials: true,
             })
             .then( data =>{
-                const arr = data.data;
-                console.log(arr);
+                let arr = data.data;
+
                 if(arr.code==="200"){
                     this.showSupplier = arr.suppliers;
+
+                    // 縣市 + 地址
+                    this.showSupplier.map((item1) => {
+                        Object.values(this.search.suCity.showAllMap).forEach((item2) => {
+                            if(item1.location_id === item2.location_id && !item1.location_name.includes(item2.location_name)){
+                                return item1["location_idName"]  = item2.location_name + item1.location_name;
+                            }
+                        })
+                    })
                 }
+                console.log(this.showSupplier);
             })
         },
 
+        // 檢查詳細地址裡是否有縣市名
+        includes_Job(index){
+            return index.location_name.includes(this.location_name.jobArea);
+        },
+        SUFFCUL_INSERT_EDIT(dataView,status){
+            if(dataView.code === "200"){
+                this.editStatus = {
+                    page : true,
+                    text: status+"成功",
+                    message: "",
+                    icon: "icon-park-solid:check-one",
+                    icon_style: "text-[green]"
+                };
+                setTimeout(() => {
+                    this.editStatus.page = false;
+                    this.bgPage = false;
 
-        checkLocalName(loc,thisinsert1){
-
-            Object.values(loc).forEach((item)=>{
-                if(item.location_name === thisinsert1.location_name.slice(0,3)){
-                    return thisinsert1.location_name.slice(0,3);
-                }
-            })
-            return "";
+                    this.searchSupplier(this.search.suName,this.search.suComplied,this.search.suCity.thisMapId);
+                }, "2000");
+            }
+            else {
+                this.editStatus = {
+                    text: status+"失敗",
+                    page : true,
+                    message: dataView.message,
+                    icon: "fluent-mdl2:status-error-full",
+                    icon_style: "text-[red]"
+                };
+            }
         },
         // 新增功能
         insertData(){
 
-            let thisinsert = this.insert.data;
-            let loc = "";     
+            let thisinsert = this.insert.data; 
 
             if(!thisinsert.name || !thisinsert.compiled 
                 || !thisinsert.email || !thisinsert.phone 
                 || !this.location_name.thisMapId 
                 || !thisinsert.location_name){
                     alert("尚有欄位未輸入");
-                }else if(this.location_name.jobArea !== this.checkLocalName(this.location_name.showAllMap,thisinsert)){
+                }else if( this.includes_Job(thisinsert)){
                     alert("詳細地址與縣市地址不同");
-                }else{
+                }else if(thisinsert.compiled > 2100000000){
+                    alert("統一編號格式錯誤")
+                }
+                else{
                     axios.post("http://localhost:8080/book_systems/supplier/add/supplier",{
                         "name":thisinsert.name, 
                         "compiled":thisinsert.compiled, 
                         "email":thisinsert.email, 
                         "phone":thisinsert.phone, 
                         "location_id":this.location_name.thisMapId, 
-                        "location_name":thisinsert.location_name
+                        "location_name": this.includes_Job(thisinsert) ? thisinsert.location_name.split(this.location_name.jobArea)[1]:thisinsert.location_name
                     })
                     .then( res => res.data)
                     .then(data =>{
                         
                         this.insert.thisPage = false;
-                        if(data.code === "200"){
-                            this.editStatus = {
-                                page : true,
-                                text: "新增成功",
-                                message: "",
-                                icon: "icon-park-solid:check-one",
-                                icon_style: "text-[green]"
-                            };
-                            setTimeout(() => {
-                                this.editStatus.page = false;
-                                this.bgPage = false;
+                        this.SUFFCUL_INSERT_EDIT(data,"新增");
+                    })
+                }
+        },
+        // 修改資料
+        editData(supplier_id){
+            let thisedit = this.edit.data; 
 
-                                this.searchSupplier("",0,"");
-                            }, "2000");
-                        }
-                        else {
-                            this.editStatus = {
-                                text: "新增失敗",
-                                page : true,
-                                message: data.message,
-                                icon: "fluent-mdl2:status-error-full",
-                                icon_style: "text-[red]"
-                            };
-                        }
+            if(!thisedit.name || !thisedit.compiled 
+                || !thisedit.email || !thisedit.phone 
+                || !this.location_name.thisMapId 
+                || !thisedit.location_name){
+                    alert("尚有欄位未輸入");
+                }else if( this.includes_Job(thisedit)){
+                    alert("詳細地址與縣市地址不同");
+                }else{
+                    axios.post("http://localhost:8080/book_systems/supplier/update/supplier",{
+                        "name":thisedit.name, 
+                        "compiled":thisedit.compiled, 
+                        "email":thisedit.email, 
+                        "phone":thisedit.phone, 
+                        "location_id":this.location_name.thisMapId, 
+                        "location_name": this.includes_Job(thisedit) ? thisedit.location_name.split(this.location_name.jobArea)[1]:thisedit.location_name,
+
+                        "serial_num":supplier_id
+                    })
+                    .then( res => res.data)
+                    .then(data =>{
+                        
+                        this.edit.thisPage = false;
+                        this.SUFFCUL_INSERT_EDIT(data,"修改");
                     })
                 }
         },
@@ -181,10 +222,12 @@ export default {
                     compiled:item.compiled,
                     email:item.email, 
                     phone:item.phone, 
-                    location_name:item.location_name
+                    location_name:item.location_name,
+
+                    serial_num:item.serial_num
                 }
             };
-            this.location_name.jobArea = item.location_name.slice(0,3);
+            this.location_name.jobArea = this.location_name.showAllMap.find( i => i.location_id.includes(item.location_id)).location_name;
         },
 
         // 點籍取消/背景效果
@@ -274,7 +317,7 @@ export default {
                 <thead class="bg-[#bfbfff]">
                     <tr class="text-center ">
                         <th class="py-3"> </th>
-                        <th>供應商編號(PK)</th>
+                        <th>供應商編號</th>
                         <th>供應商名稱</th>
                         <th>供應商統編</th>
                         <th>email</th>
@@ -292,7 +335,7 @@ export default {
                         <td>{{ item.compiled }}</td>
                         <td>{{ item.email }}</td>
                         <td>{{ item.phone }}</td>
-                        <th>{{ item.location_name }}</th>
+                        <th>{{ item.location_idName }}</th>
                     </tr>
                 </tbody>
                 <tfoot class="bg-[#bfbfff]">
@@ -324,7 +367,7 @@ export default {
                 <li>  
                     <label for="newPwd">統一編號: </label>
                     <div class="bgc">
-                        <input id="newPwd" type="number" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off">
+                        <input id="newPwd" type="number" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
                     </div>      
                 </li>
                 <li>  
@@ -336,7 +379,7 @@ export default {
                 <li>  
                     <label for="phone">電　　話: </label>
                     <div class="bgc">
-                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="on">
+                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
@@ -373,7 +416,7 @@ export default {
 
     <!-- 修改供應商 -->
     <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
-        <form action="#" method="post" @submit.prevent="editData">
+        <form action="#" method="post" @submit.prevent="editData(edit.data.serial_num)">
             <h1 class="text-center text-3xl font-bold my-6">新增供應商</h1>
             <ul class=" editContent">
                 <li>
@@ -385,7 +428,7 @@ export default {
                 <li>  
                     <label for="newPwd2">統一編號: </label>
                     <div class="bgc">
-                        <input id="newPwd2" type="number" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off">
+                        <input id="newPwd2" type="number" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
                     </div>      
                 </li>
                 <li>  
@@ -397,7 +440,7 @@ export default {
                 <li>  
                     <label for="phone2">電　　話: </label>
                     <div class="bgc">
-                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on">
+                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
