@@ -46,14 +46,15 @@ export default {
                 thisPage:false,
 
                 data:{
+                    serial_num:"",
+
                     name:"",
-                    compiled:0,
+                    compiled:"",
                     email:"", 
                     phone:"", 
                     location_name:"",
-
-                    serial_num:""
-                }
+                },
+                oldCompiled:""
             },
 
             editStatus: {
@@ -121,7 +122,11 @@ export default {
 
         // 檢查詳細地址裡是否有縣市名
         includes_Job(index){
-            return index.location_name.includes(this.location_name.jobArea);
+            if(this.location_name.showAllMap.filter( i => index.location_name.includes(i.location_name)).length === 0){
+                return true;
+            }else{
+                return index.location_name.includes(this.location_name.jobArea) ;
+            } 
         },
         SUFFCUL_INSERT_EDIT(dataView,status){
             if(dataView.code === "200"){
@@ -159,7 +164,7 @@ export default {
                 || !this.location_name.thisMapId 
                 || !thisinsert.location_name){
                     alert("尚有欄位未輸入");
-                }else if( this.includes_Job(thisinsert)){
+                }else if( !this.includes_Job(thisinsert)){
                     alert("詳細地址與縣市地址不同");
                 }else if(thisinsert.compiled > 2100000000){
                     alert("統一編號格式錯誤")
@@ -171,7 +176,7 @@ export default {
                         "email":thisinsert.email, 
                         "phone":thisinsert.phone, 
                         "location_id":this.location_name.thisMapId, 
-                        "location_name": this.includes_Job(thisinsert) ? thisinsert.location_name.split(this.location_name.jobArea)[1]:thisinsert.location_name
+                        "location_name": this.edit.data.location_name.includes(this.location_name.jobArea) ? thisinsert.location_name.split(this.location_name.jobArea)[1]:thisinsert.location_name
                     })
                     .then( res => res.data)
                     .then(data =>{
@@ -190,21 +195,33 @@ export default {
                 || !this.location_name.thisMapId 
                 || !thisedit.location_name){
                     alert("尚有欄位未輸入");
-                }else if( this.includes_Job(thisedit)){
+                }else if( !this.includes_Job(thisedit)){
                     alert("詳細地址與縣市地址不同");
                 }else{
                     axios.post("http://localhost:8080/book_systems/supplier/update/supplier",{
-                        "name":thisedit.name, 
-                        "compiled":thisedit.compiled, 
-                        "email":thisedit.email, 
-                        "phone":thisedit.phone, 
-                        "location_id":this.location_name.thisMapId, 
-                        "location_name": this.includes_Job(thisedit) ? thisedit.location_name.split(this.location_name.jobArea)[1]:thisedit.location_name,
-
-                        "serial_num":supplier_id
+                        "supplier":{
+                            "serial_num":supplier_id,
+                            "name":thisedit.name, 
+                            "compiled":thisedit.compiled, 
+                            "email":thisedit.email, 
+                            "phone":thisedit.phone, 
+                            "location_id":this.location_name.thisMapId, 
+                            "location_name": this.edit.data.location_name.includes(this.location_name.jobArea) ? thisedit.location_name.split(this.location_name.jobArea)[1]:thisedit.location_name
+                        },
+                        "oldCompiled":this.edit.oldCompiled                  
                     })
                     .then( res => res.data)
                     .then(data =>{
+                        let as = {
+                            "serial_num":supplier_id,
+                            "name":thisedit.name, 
+                            "compiled":thisedit.compiled, 
+                            "email":thisedit.email, 
+                            "phone":thisedit.phone, 
+                            "location_id":this.location_name.thisMapId, 
+                            "location_name": this.includes_Job(thisedit) ? thisedit.location_name.split(this.location_name.jobArea)[1]:thisedit.location_name
+                        }
+                        console.log(as);
                         
                         this.edit.thisPage = false;
                         this.SUFFCUL_INSERT_EDIT(data,"修改");
@@ -218,14 +235,15 @@ export default {
                 thisPage:true,
 
                 data:{
+                    serial_num:item.serial_num,
+
                     name:item.name,
                     compiled:item.compiled,
                     email:item.email, 
                     phone:item.phone, 
                     location_name:item.location_name,
-
-                    serial_num:item.serial_num
-                }
+                },
+                oldCompiled:item.compiled
             };
             this.location_name.jobArea = this.location_name.showAllMap.find( i => i.location_id.includes(item.location_id)).location_name;
         },
@@ -312,9 +330,9 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="m-6 mb-36">
-            <table class="w-full table_search">
-                <thead class="bg-[#bfbfff]">
+        <div class="m-6 mb-36 max-h-[30rem] overflow-auto table_h">
+            <table class="w-full table_search border-separate border-spacing-0">
+                <thead class="bg-[#bfbfff] border-2 border-[black] sticky top-0 ">
                     <tr class="text-center ">
                         <th class="py-3"> </th>
                         <th>供應商編號</th>
@@ -338,10 +356,11 @@ export default {
                         <th>{{ item.location_idName }}</th>
                     </tr>
                 </tbody>
-                <tfoot class="bg-[#bfbfff]">
+                <tfoot class="bg-[#bfbfff]  sticky bottom-0">
                     <tr>
-                        <td colspan="7" class="py-3 pr-14">
-                            <div class="flex justify-end ">
+                        <td colspan="7" class="py-3 pr-14" >
+                            <div class="p-1"> </div>
+                            <div class="flex justify-end " v-if="false">
                                 <input type="button" class="p-1  text-3xl font-bold hover:text-red-600 hover:scale-110 active:scale-90" value="<  ">
                                 <p class="p-1  text-3xl font-bold ">1</p>
                                 <input type="button" class="p-1  text-3xl font-bold hover:text-red-600 hover:scale-110 active:scale-90" value="  >">
@@ -352,6 +371,8 @@ export default {
             </table>
         </div>
     </div>
+
+    <!-- <img src=" https://localhost:5173/1.jpg" alt=""> -->
   
     <!-- 新增供應商 -->
     <div v-if="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
@@ -417,7 +438,7 @@ export default {
     <!-- 修改供應商 -->
     <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
         <form action="#" method="post" @submit.prevent="editData(edit.data.serial_num)">
-            <h1 class="text-center text-3xl font-bold my-6">新增供應商</h1>
+            <h1 class="text-center text-3xl font-bold my-6">修改供應商</h1>
             <ul class=" editContent">
                 <li>
                     <label for="oldPwd2">廠商名稱: </label>
@@ -528,7 +549,14 @@ export default {
         }
     }
 
+    .table_h{
+        &::-webkit-scrollbar{
+            width: 0;
+        }
+    }
+
     .table_search{
+
         td{
             border: 2px #939292 solid;
 
