@@ -277,8 +277,8 @@ export default {
 }
 </script>
 <template>
-    <div class="w-full h-fit">
-        <div class="accordion " id="accordionExample">
+    <div class="w-full h-fit ">
+        <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">                
@@ -330,7 +330,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="m-6 mb-36 max-h-[30rem] overflow-auto table_h">
+        <div class="m-6 mb-36 max-h-[40rem] overflow-auto table_h ">
             <table class="w-full table_search border-separate border-spacing-0">
                 <thead class="bg-[#bfbfff] border-2 border-[black] sticky top-0 ">
                     <tr class="text-center ">
