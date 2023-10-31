@@ -182,7 +182,7 @@ export default {
     </div>
 
     <!-- 新增供應商 -->
-    <div v-if="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
+    <div v-if="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 w-[60rem]">
         <form action="#" method="post" @submit.prevent="insertData">
             <h1 class="text-center text-3xl font-bold my-6">新增庫存</h1>
             <ul class=" editContent">
@@ -382,6 +382,8 @@ export default {
     // 新增/修改介面
     .editContent{
         margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
         li{
             display: flex;
             align-items: center;
@@ -390,9 +392,11 @@ export default {
             font-weight: 700;
             font-size: 1.25rem;
             line-height: 1.5rem;
+            width: 20rem;
 
             label{
                 margin-right: 0.75rem;
+                width: 60%;
             }
 
             .bgc{
@@ -406,7 +410,7 @@ export default {
                     border-bottom: 1px #757575 solid;
                     outline: none;
                     background-color: transparent;
-                    width: 20rem;
+                    width: 100%;
 
                     &:-webkit-autofill{
                         
