@@ -115,8 +115,10 @@ export default {
                             }
                         })
                     })
+                }else{
+                    this.showSupplier ="";
                 }
-                console.log(this.showSupplier);
+                console.log(data);
             })
         },
 
@@ -355,6 +357,11 @@ export default {
                         <td>{{ item.phone }}</td>
                         <th>{{ item.location_idName }}</th>
                     </tr>
+                    <tr v-if="showSupplier === ''" class="text-lg font-bold">
+                        <td colspan="7" class="px-4 py-2">
+                            {{ "查無資料" }}
+                        </td>
+                    </tr>
                 </tbody>
                 <tfoot class="bg-[#bfbfff]  sticky bottom-0">
                     <tr>
@@ -382,25 +389,25 @@ export default {
                 <li>
                     <label for="oldPwd">廠商名稱: </label>
                     <div class="bgc">
-                        <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入廠商名稱"  required>
+                        <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入廠商名稱"  required maxlength="20">
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd">統一編號: </label>
                     <div class="bgc">
-                        <input id="newPwd" type="number" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
+                        <input id="newPwd" type="text" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10" pattern="\d*">
                     </div>      
                 </li>
                 <li>  
                     <label for="email">信　　箱: </label>
                     <div class="bgc">
-                        <input id="email" type="email" v-model="insert.data.email" placeholder="請輸入Email" required autocomplete="email">
+                        <input id="email" type="email" v-model="insert.data.email" placeholder="請輸入Email" required autocomplete="email" maxlength="44">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">電　　話: </label>
                     <div class="bgc">
-                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10" pattern="0[\d]{9}">
                     </div>
                 </li>
                 <li>  
@@ -423,7 +430,7 @@ export default {
                             </div>
                         </button>
                         <div class="bgc">
-                            <input id="location" type="text" v-model="insert.data.location_name" placeholder="請輸入詳細地址 (不含縣市)" required>
+                            <input id="location" type="text" v-model="insert.data.location_name" placeholder="請輸入詳細地址 (不含縣市)" required maxlength="40">
                         </div>    
                     </div>
                 </li>
@@ -443,25 +450,27 @@ export default {
                 <li>
                     <label for="oldPwd2">廠商名稱: </label>
                     <div class="bgc">
-                        <input id="oldPwd2" type="text" v-model="edit.data.name" placeholder="請輸入廠商名稱"  required>
+                        <input id="oldPwd2" type="text" v-model="edit.data.name" placeholder="請輸入廠商名稱"  required maxlength="20">
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd2">統一編號: </label>
                     <div class="bgc">
-                        <input id="newPwd2" type="number" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
+                        <input id="newPwd2" type="text" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10" pattern="\d*">
+                        <p class="text-xl font-bold text-red hidden">請輸入正確的格式(純數字)</p>
                     </div>      
                 </li>
                 <li>  
                     <label for="email2">信　　箱: </label>
                     <div class="bgc">
-                        <input id="email2" type="email" v-model="edit.data.email" placeholder="請輸入Email" required autocomplete="email">
+                        <input id="email2" type="email" v-model="edit.data.email" placeholder="請輸入Email" required autocomplete="email" maxlength="44">
                     </div>
                 </li>
                 <li>  
                     <label for="phone2">電　　話: </label>
                     <div class="bgc">
-                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10">
+                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10" pattern="0[\d]{9}">
+                        <p class="text-xl font-bold text-red hidden">請輸入正確的格式 (0xxxxxxxxx)</p>
                     </div>
                 </li>
                 <li>  
@@ -484,7 +493,7 @@ export default {
                             </div>
                         </button>
                         <div class="bgc">
-                            <input type="text" v-model="edit.data.location_name" placeholder="請輸入詳細地址" required>
+                            <input type="text" v-model="edit.data.location_name" placeholder="請輸入詳細地址" required maxlength="40">
                         </div>    
                     </div>
                 </li>

@@ -47,7 +47,7 @@ export default {
             this.Account = user_data.account;
             this.name = user_data.user_name;
             this.email = user_data.email;
-            this.born = user_data.born.split('T')[0];
+            this.born = !user_data.born ? null : user_data.born.split('T')[0];
             this.minYear = eval(thisdate.getFullYear() + "-100") + "-01-01";
             // this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
             this.maxYear = thisdate.toLocaleString('sv').split(' ')[0];
@@ -111,11 +111,12 @@ export default {
                 else {
                     this.editStatus = {
                         text: "修改失敗",
-                        meesage: data.message,
+                        message: data.message,
                         icon: "fluent-mdl2:status-error-full",
                         icon_style: "text-[red]"
                     };
                 }
+                console.log(data);
             });
         },
 

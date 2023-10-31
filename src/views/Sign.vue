@@ -68,7 +68,7 @@ export default {
                     email:this.email, 
                     pwd:this.passwork, 
                     born:this.bron, 
-                    redate:this.redate.toLocaleString('sv')
+                    redate:this.redate.toLocaleString('sv').replace(" ","T")
                 },{withCredentials: true})
                 .then( res =>{
 
@@ -125,7 +125,7 @@ export default {
                     <div class="mb-4">
                         <label for="Born" class="block text-xl">出生年月日</label>
                         <!-- showPicker() -->
-                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]"  v-model="bron" required>
+                        <input id="Born" type="date" :min="minYear" :max="maxYear" class="p-3 rounded-lg w-[25rem]"  v-model="bron">
                     </div>
                     <div class="mb-4">
                         <label for="Email" class="block text-xl">Email</label>

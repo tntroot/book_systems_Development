@@ -19,14 +19,36 @@ export default {
     },
     methods:{
         vey1(){
+
+            // if(this.find_email === ""){
+            //     progress.style = "display:block";
+            //     let percent = 0;
+
+            //     var id = setInterval(()=>{
+            //         //let percent = Math.floor((ProgressEvent.loaded / ProgressEvent.total) * 100);
+            //         percent ++ ;
+            //         prog.setAttribute('aria-valuenow', percent);
+            //         prog.setAttribute('style', 'width:' + percent + '%');
+            //         val.innerText = percent + '%';
+
+            //         if(percent === 100){
+            //             clearInterval(id);
+
+            //         }
+            //     } ,10);
+            // } 
+
+            let progress = document.querySelector('#progress');
+            let prog = document.querySelector('.progress-bar');
+            let val = document.querySelector('#val');
+
             axios.post("http://localhost:8080/book_systems/forgetPwd",{
                 "email":this.email
-            },
-            {withCredentials:true})
+            })
             .then(res => res.data)
             .then(data => {
                 if(data.code !== "200"){
-                    this.find_email = data.message;
+                    this.find_email = data.message;       
                 }else{
                     this.find_email="";
                     this.ckeckEmail=false;
@@ -34,7 +56,8 @@ export default {
             })
             .catch(err =>{
                 console.log(err);
-            })
+                progress.style = "display:none"
+            }) 
         },
         verify_check(){
 
@@ -73,6 +96,20 @@ export default {
             <p v-if="find_email" class="text-red-600 text-xl">{{ find_email }}</p>
         </div>
         <button type="sumbit" class="px-14 my-3 py-3 text-white bg-gray-500 mx-auto rounded-xl block hover:scale-105 active:scale-95" @click="vey1">確認</button>
+        <!-- 進度條 -->
+        <!-- <div class="text-3xl my-3 w-[25rem]">
+            <p>Loading: </p>
+            <progress max="100" value="0" class="w-full h-6 my-2 bg-[#1a6ec2] text-[#123456]"></progress>
+            <p id="val" class=" text-center">0</p>
+        </div> -->
+        <div id="progress" class="w-[25rem] text-3xl my-3 hidden">
+            <p>Loading: </p>
+            <div class="progress my-3">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div> 
+            </div>
+            <p id="val" class=" text-center">0</p>
+        </div>
+        
     </form>
 
     <div v-else class="w-fix mx-auto flex flex-col items-center my-20">
