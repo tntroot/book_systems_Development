@@ -9,6 +9,9 @@ export default {
     },
     data() {
         return {
+            tagPage:false,
+            tagAll:"",
+            tagSearch:[],
             search:{
                 iSBN:"",
                 bookName:"",
@@ -63,7 +66,10 @@ export default {
             .then(data =>{
                 if(data.code === "200"){
                     this.searchData = data.stocks;
+                }else{
+                    this.searchData = "";
                 }
+                console.log(data);
             })
         },
 
@@ -72,6 +78,7 @@ export default {
             this.insert.thisPage=false;
             this.edit.thisPage = false;
             this.editStatus.page=false;
+            this.tagPage = false;
             this.bgPage=false;
         },
 
@@ -80,9 +87,52 @@ export default {
             this.editStatus.page=item;
             this.bgPage=item;
         },
+
+        searchType(){
+            this.search.tag = this.tagSearch.toString();
+            this.searchAll(this.search);
+        },
+
+        // 重製
+        resat(){
+            const arrTag = document.getElementsByName("arrTag");
+            arrTag.forEach(item =>{
+                item.checked = null ;
+            })
+        },
+        // 選擇分類
+        checkTag(){
+            const arrTag = document.getElementsByName("arrTag");
+            this.tagSearch = [];
+            arrTag.forEach(item => {
+                if(item.checked === true){
+                    this.tagSearch.push(item.nextSibling.innerText);
+                }
+            })
+            this.bgPage = false;
+            this.tagPage = false ;
+        },
+        // 清除分類
+        remove(item,index){
+            const arrTag = document.getElementsByName("arrTag");
+            this.tagSearch.splice(index,1);
+            arrTag.forEach(item2 =>{
+                if(item2.nextSibling.innerText === item){
+                    item2.checked = null;
+                }
+            })
+        }
     },
     created(){
         this.searchAll(this.search);
+
+        axios.get("http://localhost:8080/book_systems/setting/stock/search/tag")
+        .then( res => res.data )
+        .then( data =>{
+            if(data.code==="200"){
+                this.tagAll = data.bookTags;
+            }
+        } )
     }
 }
 </script>
@@ -99,45 +149,56 @@ export default {
                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="flex mb-6 flex-wrap">
-                            <div class="mr-14">
+                            <div class="mr-14 my-2">
                                 <label for="isbn">ISBN</label>
-                                <input id="isbn" class="search" type="text" autocomplete="on">
+                                <input id="isbn" class="search" v-model="search.iSBN" type="text" autocomplete="on" maxlength="13">
                             </div>
-                            <div class="mr-14">
+                            <div class="mr-14 my-2">
                                 <label for="book">書名</label>
-                                <input id="book" class="search" type="text" autocomplete="on">
+                                <input id="book" class="search" v-model="search.bookName" type="text" autocomplete="on" maxlength="45">
                             </div>
-                            <div class="mr-14">
+                            <div class="mr-14 my-2">
                                 <label for="name">作者</label>
-                                <input id="name" class="search" type="text" autocomplete="on">
+                                <input id="name" class="search" v-model="search.user" type="text" autocomplete="on" maxlength="45">
                             </div>
-                            <div class="mr-14">
+                            <div class="mr-14 my-2">
                                 <label for="stock" class="block">庫存量</label>
                                 <div class="flex">
-                                    <select class="p-1 border-gray-400 border-2 outline-none rounded-lg mr-1" id="compare">
-                                        <option value=">">大於</option>
-                                        <option value="<">小於</option>
+                                    <select class="p-1 border-gray-400 border-2 outline-none rounded-lg mr-1" id="compare" v-model="search.compare">
+                                        <option value=">=">大於</option>
+                                        <option value="<=">小於</option>
                                     </select>
-                                    <input id="stock" class="search" type="number">
+                                    <input id="stock" class="search text-right w-[6rem]" v-model="search.inventory" type="number" maxlength="9">
                                 </div>
                             </div>
                         </div>
                         
                         <div class="mr-14">
-                            <label for="tag">分類</label>
-                            <input id="tag" class="search w-[80%]" type="text">
+                            <label for="tag" class="text-xl">分類</label>
+                            <!-- <input id="tag" class="search w-[80%]" type="text"> -->
+                            <div class="flex flex-wrap my-3">
+                                <div v-for="(item,index) in tagSearch" class="hover:scale-110 active:scale-90 cursor-pointer " @click="remove(item,index)">
+                                    <div class="bg-[#c8c8c8] py-1 px-3 mr-3 text-xl font-bold rounded-lg">
+                                        {{ item + ' X' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex w-fit items-center text-xl font-bold text-[#75c0de] hover:scale-110 active:scale-90 cursor-pointer " @click="tagPage = true,bgPage = true">
+                                <Icon icon="gridicons:add" />
+                                <p class="ml-1">選擇分類</p>
+                            </div>
                         </div>
                         <div class="flex justify-end mt-6">
                             <button type="button" class="innsert_search_btn bg-[gray]" @click="insert.thisPage=!insert.thisPage,bgPage=!bgPage">新增</button>
-                            <button type="button" class="innsert_search_btn bg-[blue]">查詢</button>
+                            <button type="button" class="innsert_search_btn bg-[blue]" @click="searchType">查詢</button>
                         </div>
                                             
                     </div>
                 </div>
             </div>
         </div>
-        <div class="m-6 mb-36">
-            <table class="w-full table_search">
+        <div class="m-6 mb-36 max-h-[40rem] overflow-auto table_h">
+            <table class="w-full table_search border-separate border-spacing-0">
                 <thead class="bg-[#bfbfff]">
                     <tr class="text-center ">
                         <th class="py-3"> </th>
@@ -154,7 +215,7 @@ export default {
                 <tbody>
                     <tr v-for="(item) in searchData" class="text-center ">
                         <td class="py-3">
-                            <button type="button" class="revise">修改</button>
+                            <button type="button" class="revise" @click="edit.thisPage = true,bgPage=true">修改</button>
                         </td>
                         <td>{{ item.iSBN }}</td>
                         <td>{{ item.book_name }}</td>
@@ -165,8 +226,13 @@ export default {
                         <td>{{ item.min_inventory }}</td>
                         <td>{{ item.tag.replace(",","、") }}</td>
                     </tr>
+                    <tr v-if="searchData === ''" class="text-lg font-bold">
+                        <td colspan="9" class="px-4 py-2">
+                            {{ "查無資料" }}
+                        </td>
+                    </tr>
                 </tbody>
-                <tfoot class="bg-[#bfbfff]">
+                <tfoot class="bg-[#bfbfff] sticky bottom-0">
                     <tr>
                         <td colspan="9" class="py-3 pr-14">
                             <div v-if="false" class="flex justify-end ">
@@ -181,7 +247,25 @@ export default {
         </div>
     </div>
 
-    <!-- 新增供應商 -->
+    <div v-show="tagPage" class=" w-[50%] top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] p-3 bg-white rounded-xl fixed z-50 tagePage" >
+        <div class="w-full border-2 border-[#c4c4c4] p-3 rounded-xl">
+            <h1 class="text-2xl font-bold">分類</h1>
+            <div class="flex flex-wrap">
+                <div v-for="(item,index) in tagAll">
+                    <div class="text-2xl mx-3 my-2">
+                        <input type="checkbox" name="arrTag" :id="'arrTag'+index" class="w-5 h-5">
+                        <label :for="'arrTag'+index" class="ml-2">{{ item.tag }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center mb-3 mt-6">
+            <button type="button" class="innsert_search_btn bg-[gray]" @click="resat">重設</button>
+            <button type="button" class="innsert_search_btn bg-[blue]" @click="checkTag">確定</button>
+        </div>
+    </div>
+
+    <!-- 新增庫存 -->
     <div v-if="insert.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 w-[60rem]">
         <form action="#" method="post" @submit.prevent="insertData">
             <h1 class="text-center text-3xl font-bold my-6">新增庫存</h1>
@@ -222,10 +306,10 @@ export default {
                         <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
-                <li>  
-                    <label for="phone">分類: </label>
-                    <div class="bgc">
-                        <input id="phone" type="text" v-model="insert.data.phone" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
+                <li style="width: 80%;">  
+                    <label for="phone" style="width: 20%;">分類: </label>
+                    <div class="bgc" style="width: 100%;">
+                        <input id="phone"  type="text" v-model="insert.data.phone" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 
@@ -237,59 +321,54 @@ export default {
         </form>
     </div>
 
-    <!-- 修改供應商 -->
-    <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 min-w-[40rem]">
+    <!-- 修改分類-->
+    <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 w-[60rem]">
         <form action="#" method="post" @submit.prevent="editData(edit.data.serial_num)">
             <h1 class="text-center text-3xl font-bold my-6">修改供應商</h1>
             <ul class=" editContent">
                 <li>
-                    <label for="oldPwd2">廠商名稱: </label>
+                    <label for="oldPwd">ISBN: </label>
                     <div class="bgc">
-                        <input id="oldPwd2" type="text" v-model="edit.data.name" placeholder="請輸入廠商名稱"  required>
+                        <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入商品的ISBN"  required>
                     </div>         
                 </li>
                 <li>  
-                    <label for="newPwd2">統一編號: </label>
+                    <label for="newPwd">書名: </label>
                     <div class="bgc">
-                        <input id="newPwd2" type="number" v-model="edit.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
+                        <input id="newPwd" type="text" v-model="insert.data.compiled" placeholder="請輸入書名"  required autocomplete="off" maxlength="10">
                     </div>      
                 </li>
                 <li>  
-                    <label for="email2">信　　箱: </label>
+                    <label for="email">作者: </label>
                     <div class="bgc">
-                        <input id="email2" type="email" v-model="edit.data.email" placeholder="請輸入Email" required autocomplete="email">
+                        <input id="email" type="text" v-model="insert.data.email" placeholder="請輸入作者" required autocomplete="email">
                     </div>
                 </li>
                 <li>  
-                    <label for="phone2">電　　話: </label>
+                    <label for="phone">銷售價格: </label>
                     <div class="bgc">
-                        <input id="phone2" type="text" v-model="edit.data.phone" placeholder="請輸入電話" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入銷售價格" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
-                    <label for="location">地　　址: </label>
-                    <div>
-                        <button type="button" id="jobArea" class=" relative bg-gray-50 border-2 border-gray-300 text-gray-900 w-[150px] rounded-lg focus:ring-blue-500 focus:border-blue-500 mr-1 mx-1 cursor-pointer my-1 group" >
-                            <div class="flex items-center justify-evenly p-2.5" @click="location_name.mapShow = !location_name.mapShow">
-                                <!-- @click="location_name.mapShow = !location_name.mapShow" -->
-                                <p>{{ location_name.jobArea }}</p>
-                                <Icon icon="iconamoon:arrow-down-2-bold" width="20" />
-                            </div>
-                            <div v-show="location_name.mapShow" tabindex="0" class="mapAndPriceSelect shadow-xl">
-                                <div v-for="(item, index) in location_name.showAllMap"
-                                    class=" font-bold py-3 pl-3 cursor-pointer hover:bg-blue-300 hover:text-white"
-                                    @click="changeMapInsertAndUpdate(item);">
-                                    <input type="radio" :id="'showMap' + index" name="thismap" class="mr-3 cursor-pointer" :value="item.location_id"
-                                        :checked="location_name.jobArea === item.location_name">
-                                    <label :for="'showMap' + index" class="cursor-pointer">{{ item.location_name }}</label>
-                                </div>
-                            </div>
-                        </button>
-                        <div class="bgc">
-                            <input type="text" v-model="edit.data.location_name" placeholder="請輸入詳細地址" required>
-                        </div>    
+                    <label for="phone">庫存量: </label>
+                    <div class="bgc">
+                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
+                <li>  
+                    <label for="phone">最低庫存量: </label>
+                    <div class="bgc">
+                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
+                    </div>
+                </li>
+                <li style="width: 80%;">  
+                    <label for="phone" style="width: 20%;">分類: </label>
+                    <div class="bgc" style="width: 100%;">
+                        <input id="phone"  type="text" v-model="insert.data.phone" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
+                    </div>
+                </li>
+                
             </ul>
             <div class="flex justify-evenly mb-6">
                 <button type="button" class="py-3 px-6 bg-[#949494] text-[#FFFFFF] font-bold rounded-lg hover:scale-105 active:scale-95" @click="clossPage">取消</button>
@@ -321,7 +400,7 @@ export default {
             div{
                 .search{
                     border: 2px solid gray;
-                    padding: 0.25rem;
+                    padding: 0.5rem;
                     border-radius: 0.5rem;
                     display: block;
                     outline: none;
@@ -330,25 +409,41 @@ export default {
                         appearance: none;
                     }
                 }
-            }
+            }     
+        }
+    }
 
-            .innsert_search_btn{
-                padding: 0.5rem 2rem;
-                border-radius: 0.75rem;
-                color: white;
-                margin-right: 1.5rem;
-                font-size: 1.25rem;
-                line-height: 1.75rem;
-                font-weight: bold;
+    .table_h{
+        &::-webkit-scrollbar{
+            width: 0;
+        }
+    }
 
-                &:hover{
-                    scale: 1.05;
-                }
-                &:active{
-                    scale: 0.95;
-                }
-            }
-            
+    .tagePage{
+        &::before{
+            content: "X";
+            position: absolute;
+            font-size: 2rem;
+            line-height: 1.5rem;
+            top: -10%; right: -5%;
+            color: white;
+        }
+    }
+
+    .innsert_search_btn{
+        padding: 0.5rem 2rem;
+        border-radius: 0.75rem;
+        color: white;
+        margin-right: 1.5rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: bold;
+
+        &:hover{
+            scale: 1.05;
+        }
+        &:active{
+            scale: 0.95;
         }
     }
 
@@ -384,6 +479,7 @@ export default {
         margin: 0 auto;
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-evenly;
         li{
             display: flex;
             align-items: center;
