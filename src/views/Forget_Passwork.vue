@@ -20,23 +20,25 @@ export default {
     methods:{
         vey1(){
 
-            // if(this.find_email === ""){
-            //     progress.style = "display:block";
-            //     let percent = 0;
+            // onUploadProgress:(ProgressEvent)=>{
+            //     if(this.find_email === ""){
+            //         progress.style = "display:block";
+            //         let percent = 0;
 
-            //     var id = setInterval(()=>{
-            //         //let percent = Math.floor((ProgressEvent.loaded / ProgressEvent.total) * 100);
-            //         percent ++ ;
-            //         prog.setAttribute('aria-valuenow', percent);
-            //         prog.setAttribute('style', 'width:' + percent + '%');
-            //         val.innerText = percent + '%';
+            //         var id = setInterval(()=>{
+            //             //let percent = Math.floor((ProgressEvent.loaded / ProgressEvent.total) * 100);
+            //             percent ++ ;
+            //             prog.setAttribute('aria-valuenow', percent);
+            //             prog.setAttribute('style', 'width:' + percent + '%');
+            //             val.innerText = percent + '%';
 
-            //         if(percent === 100){
-            //             clearInterval(id);
+            //             if(percent === 100){
+            //                 clearInterval(id);
 
-            //         }
-            //     } ,10);
-            // } 
+            //             }
+            //         } ,10);
+            //     } 
+            // }
 
             let progress = document.querySelector('#progress');
             let prog = document.querySelector('.progress-bar');
@@ -44,7 +46,7 @@ export default {
 
             axios.post("http://localhost:8080/book_systems/forgetPwd",{
                 "email":this.email
-            })
+            },{withCredentials:true})
             .then(res => res.data)
             .then(data => {
                 if(data.code !== "200"){

@@ -395,7 +395,7 @@ export default {
                 <li>  
                     <label for="newPwd">統一編號: </label>
                     <div class="bgc">
-                        <input id="newPwd" type="text" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10" pattern="\d*">
+                        <input id="newPwd" type="number" v-model="insert.data.compiled" placeholder="請輸入統一編號"  required autocomplete="off" maxlength="10">
                     </div>      
                 </li>
                 <li>  

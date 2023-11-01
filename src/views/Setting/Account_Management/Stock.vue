@@ -26,26 +26,31 @@ export default {
                 thisPage:false,
 
                 data:{
-                    name:"",
-                    compiled:0,
-                    email:"", 
-                    phone:"", 
-                    location_name:"",
+                    iSBN:"", 
+                    book_name:"", 
+                    user:"", 
+                    price:0, 
+                    inventory:0, 
+                    min_inventory:0, 
+                    tag:""
                 }
             },
             edit:{
                 thisPage:false,
 
                 data:{
-                    serial_num:"",
+                    stock:{
+                        iSBN:"",
+                        book_name:"", 
+                        user:"", 
+                        price:0, 
+                        inventory:0, 
+                        min_inventory:0, 
+                        tag:""
+                    },
 
-                    name:"",
-                    compiled:"",
-                    email:"", 
-                    phone:"", 
-                    location_name:"",
+                    oldISBN:""
                 },
-                oldCompiled:""
             },
 
             editStatus: {
@@ -121,7 +126,99 @@ export default {
                     item2.checked = null;
                 }
             })
-        }
+        },
+
+        // 新增資料
+        insertData(){
+            let thisinsert = this.insert.data; 
+
+            if(!thisinsert.iSBN || !thisinsert.book_name 
+                || !thisinsert.user || !thisinsert.price 
+                || !thisinsert.inventory 
+                || !thisinsert.min_inventory || !thisinsert.tag){
+                    alert("尚有欄位未輸入");
+                }
+                else{
+                    axios.post("http://localhost:8080/book_systems/setting/stock/add/stock",this.insert.data)
+                    .then( res => res.data)
+                    .then(data =>{
+                        
+                        this.insert.thisPage = false;
+                        this.SUFFCUL_INSERT_EDIT(data,"新增");
+                    })
+                }
+        },
+
+        // 修改按鈕
+        editBtn(item){
+            this.bgPage = true;
+            this.edit = {
+                thisPage:true,
+
+                data:{
+                    stock:{
+                        iSBN:item.iSBN,
+                        book_name:item.book_name, 
+                        user:item.user, 
+                        price:item.price, 
+                        inventory:item.inventory, 
+                        min_inventory:item.min_inventory, 
+                        tag:item.tag
+                    },
+
+                    oldISBN:item.iSBN
+                },
+            };
+        },
+
+        //修改確認
+        editData(){
+            let thisedit = this.edit.data; 
+
+            if(!thisedit.stock.iSBN || !thisedit.stock.book_name 
+                || !thisedit.stock.user || !thisedit.stock.price
+                || !thisedit.stock.inventory 
+                || !thisedit.stock.min_inventory || !thisedit.stock.tag){
+                    alert("尚有欄位未輸入");
+                }else{
+                    console.log(thisedit);
+                    axios.post("http://localhost:8080/book_systems/setting/stock/edit/stock",thisedit)
+                    .then( res => res.data)
+                    .then(data =>{
+                        console.log(data);
+                        
+                        this.edit.thisPage = false;
+                        this.SUFFCUL_INSERT_EDIT(data,"修改");
+                    })
+                }
+        },
+
+        SUFFCUL_INSERT_EDIT(dataView,status){
+            if(dataView.code === "200"){
+                this.editStatus = {
+                    page : true,
+                    text: status+"成功",
+                    message: "",
+                    icon: "icon-park-solid:check-one",
+                    icon_style: "text-[green]"
+                };
+                setTimeout(() => {
+                    this.editStatus.page = false;
+                    this.bgPage = false;
+
+                    this.searchAll(this.search);
+                }, "2000");
+            }
+            else {
+                this.editStatus = {
+                    text: status+"失敗",
+                    page : true,
+                    message: dataView.message,
+                    icon: "fluent-mdl2:status-error-full",
+                    icon_style: "text-[red]"
+                };
+            }
+        },
     },
     created(){
         this.searchAll(this.search);
@@ -178,7 +275,7 @@ export default {
                             <!-- <input id="tag" class="search w-[80%]" type="text"> -->
                             <div class="flex flex-wrap my-3">
                                 <div v-for="(item,index) in tagSearch" class="hover:scale-110 active:scale-90 cursor-pointer " @click="remove(item,index)">
-                                    <div class="bg-[#c8c8c8] py-1 px-3 mr-3 text-xl font-bold rounded-lg">
+                                    <div class="bg-[#c8c8c8] py-1 px-3 mr-3 my-2 text-xl font-bold rounded-lg">
                                         {{ item + ' X' }}
                                     </div>
                                 </div>
@@ -199,7 +296,7 @@ export default {
         </div>
         <div class="m-6 mb-36 max-h-[40rem] overflow-auto table_h">
             <table class="w-full table_search border-separate border-spacing-0">
-                <thead class="bg-[#bfbfff]">
+                <thead class="bg-[#bfbfff] sticky top-0">
                     <tr class="text-center ">
                         <th class="py-3"> </th>
                         <th>ISBN</th>
@@ -215,7 +312,7 @@ export default {
                 <tbody>
                     <tr v-for="(item) in searchData" class="text-center ">
                         <td class="py-3">
-                            <button type="button" class="revise" @click="edit.thisPage = true,bgPage=true">修改</button>
+                            <button type="button" class="revise" @click="editBtn(item)">修改</button>
                         </td>
                         <td>{{ item.iSBN }}</td>
                         <td>{{ item.book_name }}</td>
@@ -273,43 +370,43 @@ export default {
                 <li>
                     <label for="oldPwd">ISBN: </label>
                     <div class="bgc">
-                        <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入商品的ISBN"  required>
+                        <input id="oldPwd" type="text" v-model="insert.data.iSBN" placeholder="請輸入商品的ISBN"  required autocomplete="off" maxlength="13">
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd">書名: </label>
                     <div class="bgc">
-                        <input id="newPwd" type="text" v-model="insert.data.compiled" placeholder="請輸入書名"  required autocomplete="off" maxlength="10">
+                        <input id="newPwd" type="text" v-model="insert.data.book_name" placeholder="請輸入書名"  required autocomplete="off" maxlength="40">
                     </div>      
                 </li>
                 <li>  
                     <label for="email">作者: </label>
                     <div class="bgc">
-                        <input id="email" type="text" v-model="insert.data.email" placeholder="請輸入作者" required autocomplete="email">
+                        <input id="email" type="text" v-model="insert.data.user" placeholder="請輸入作者" required autocomplete="text" maxlength="10">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">銷售價格: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入銷售價格" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="insert.data.price" placeholder="請輸入銷售價格" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">庫存量: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入庫存量" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="insert.data.inventory" placeholder="請輸入庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">最低庫存量: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="insert.data.min_inventory" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li style="width: 80%;">  
                     <label for="phone" style="width: 20%;">分類: </label>
                     <div class="bgc" style="width: 100%;">
-                        <input id="phone"  type="text" v-model="insert.data.phone" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
+                        <input id="phone"  type="text" v-model="insert.data.tag" placeholder="請輸入分類 (以逗號區隔 ',')" required autocomplete="on" maxlength="45">
                     </div>
                 </li>
                 
@@ -323,49 +420,49 @@ export default {
 
     <!-- 修改分類-->
     <div v-if="edit.thisPage" class="rounded-xl border-2 border-black px-6 py-3 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white z-10 w-[60rem]">
-        <form action="#" method="post" @submit.prevent="editData(edit.data.serial_num)">
-            <h1 class="text-center text-3xl font-bold my-6">修改供應商</h1>
+        <form action="#" method="post" @submit.prevent="editData()">
+            <h1 class="text-center text-3xl font-bold my-6">修改庫存</h1>
             <ul class=" editContent">
                 <li>
                     <label for="oldPwd">ISBN: </label>
                     <div class="bgc">
-                        <input id="oldPwd" type="text" v-model="insert.data.name" placeholder="請輸入商品的ISBN"  required>
+                        <input id="oldPwd" type="text" v-model="edit.data.stock.iSBN" placeholder="請輸入商品的ISBN"  required>
                     </div>         
                 </li>
                 <li>  
                     <label for="newPwd">書名: </label>
                     <div class="bgc">
-                        <input id="newPwd" type="text" v-model="insert.data.compiled" placeholder="請輸入書名"  required autocomplete="off" maxlength="10">
+                        <input id="newPwd" type="text" v-model="edit.data.stock.book_name" placeholder="請輸入書名"  required autocomplete="off" maxlength="10">
                     </div>      
                 </li>
                 <li>  
                     <label for="email">作者: </label>
                     <div class="bgc">
-                        <input id="email" type="text" v-model="insert.data.email" placeholder="請輸入作者" required autocomplete="email">
+                        <input id="email" type="text" v-model="edit.data.stock.user" placeholder="請輸入作者" required autocomplete="email">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">銷售價格: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入銷售價格" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="edit.data.stock.price" placeholder="請輸入銷售價格" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">庫存量: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入庫存量" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="edit.data.stock.inventory" placeholder="請輸入庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li>  
                     <label for="phone">最低庫存量: </label>
                     <div class="bgc">
-                        <input id="phone" type="number" v-model="insert.data.phone" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
+                        <input id="phone" type="number" v-model="edit.data.stock.min_inventory" placeholder="請輸入最低庫存量" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 <li style="width: 80%;">  
                     <label for="phone" style="width: 20%;">分類: </label>
                     <div class="bgc" style="width: 100%;">
-                        <input id="phone"  type="text" v-model="insert.data.phone" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
+                        <input id="phone"  type="text" v-model="edit.data.stock.tag" placeholder="請輸入分類" required autocomplete="on" maxlength="10">
                     </div>
                 </li>
                 
