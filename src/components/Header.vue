@@ -12,7 +12,7 @@ export default {
             
         }
     },
-    computed:{...mapState(defineStore,['account','accountt'])},
+    computed:{...mapState(defineStore,['account','account_src'])},
     methods:{
 
         ...mapActions(defineStore,["getIsLogin"]),
@@ -69,7 +69,7 @@ export default {
             </div>
             <div v-else class=" relative group">
                 <div class="flex items-center">
-                    <img src="/people.png" alt="people" width="50">
+                    <img :src="account_src" alt="people" width="50" class=" rounded-full">
                     <p class="mx-3 text-xl font-bold">{{ account }}</p>
                 </div>
                 <div class=" fixed scale-0 group-hover:scale-100 duration-300 origin-top-left z-50 setting pt-3">

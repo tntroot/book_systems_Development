@@ -11,6 +11,7 @@ export default defineStore("indexStatus",{
 
         isLogin: false,
         account:"",
+        account_src: "",
     })
     // state:()=>{
     //     return {
@@ -45,9 +46,10 @@ export default defineStore("indexStatus",{
             console.log("hi")
             return [this.isLogin,this.account];
         },
-        setISLogin(login,account){
+        setISLogin(login, account, img){
             this.isLogin = login;
             this.account = account;
+            this.account_src = img ? `data:image/png;base64, ${img}`  : "../../public/people.png";
         }
     }
 });

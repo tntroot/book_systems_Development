@@ -12,13 +12,14 @@ import axios from 'axios';
 import SuffcusOrErrorView from './components/SuffcusOrError.vue';
 import bgcView from './components/Bgc.vue';
 
+import 'default-passive-events';
+
 import "bootstrap"; // 從nodeModule中載入Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"; // Import css file
 
 import './assets/main.css'
 
 const app = createApp(App)
-
 
   
   // router.beforeEach((to,from,next)=>{
@@ -64,13 +65,13 @@ const app = createApp(App)
         if(data.code === "200"){
           to.query={user_data:data.userShows};
           if(to.meta.headerLogin){
-            defineStore().setISLogin(true,data.userShows.account);
+            defineStore().setISLogin(true,data.userShows.account, data.userShows.img);
             next();
           }else{
             next();
           }
         }else{
-          defineStore().setISLogin(false,"");
+          defineStore().setISLogin(false, "", "");
           if(to.path == '/setting' || to.meta.requiresAuth){
             alert("請先登入");
             next("/login")

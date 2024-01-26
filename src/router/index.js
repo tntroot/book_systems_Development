@@ -80,6 +80,10 @@ const router = createRouter({
 
         // 僅員工使用
         {
+            path:'addAccount',
+            component: () => import('../views/Setting/Account_Management/Add_Account.vue'),
+        },
+        {
           path:'purchase',
           component: () => import('../views/Setting/Account_Management/Purchase.vue'),
         },

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import SuffcusOrError from '../../components/SuffcusOrError.vue';
 import Bgc from '../../components/Bgc.vue';
+import AvaTar from '../../components/AvaTar.vue';
 export default {
     data() {
         return {
@@ -14,7 +15,9 @@ export default {
             redate: "",
             minYear: "",
             maxYear: "",
-            avatar: "../../../public/people.png",
+
+            updateAvatar: "",
+
             /**
              * @param {boolean} editPwd 呼出修改密碼介面
              * @param {boolean} editPwdCheck 驗證密碼是否修改成功介面
@@ -52,6 +55,10 @@ export default {
             // this.maxYear=thisdate.getFullYear() + "-" + (thisdate.getMonth()+1).toString().padStart(2,'0') + "-" + thisdate.getDate().toString().padStart(2,'0');
             this.maxYear = thisdate.toLocaleString('sv').split(' ')[0];
             this.thisUserData = user_data.manager;
+
+            this.updateAvatar = user_data.img ? `data:image/png;base64, ${user_data.img}`  : "../../../public/people.png";
+
+            console.log(user_data);
         },
         editUser() {
             const thisBorn = new Date(this.born);
@@ -66,6 +73,7 @@ export default {
                 axios.post("http://localhost:8080/book_systems/setting/editUser", {
                     "user_name": this.name,
                     "born": this.born,
+                    "img": this.updateAvatar,
                     "account": this.Account
                 }, { withCredentials: true })
                     .then(res => res.data)
@@ -124,33 +132,18 @@ export default {
             this.bgc = item;
             this.editPwdPage.editPwdCheck = item;
         },
-
-        handleFile(e) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                console.log(e.target.result);
-                this.avatar = e.target.result;
-            };
-        }
     },
     mounted() {
         this.seetting();
     },
-    components: { SuffcusOrError, Bgc }
+    components: { SuffcusOrError, Bgc, AvaTar, }
 }
 </script>
 <template>
     <form class=" border-2 border-gray-600 rounded-xl p-11 mx-auto my-12">
 
         <div class="py-6 w-full text-center font-bold text-3xl border-b-2 border-b-[#bdbdbd] mb-6">修改個人資訊</div>
-
-        <div v-if="false" class="head_img">
-            <input type="file" id="f" accept="image/*" @change="handleFile" class="hiddenInput" style="display:none"/> 
-            <img id="img" class="avatarImg" :src="this.avatar" onclick="f.click()">
-            <!-- <p class="text_area">上傳頭像</p> -->
-        </div>
+        <AvaTar :avatar="updateAvatar" @imageBase64="updateAvatar = $event" />
         <div class="flex mb-3">
             <div class="mx-6">
                 <label for="Account" class="block text-xl text-bold">{{ thisUserData === 2 ? '帳號' : '人員編號'}}</label>
@@ -225,46 +218,7 @@ export default {
     <Bgc v-if="bgc" @click="editPwdPage.editPwdCheck = false, bgc = false, editPwdPage.editPwd=false" />
 </template>
 
-<style lang="scss">
-    .head_img{
-        width: fit-content;
-        margin: 1.5rem auto 3rem auto;
-        border-radius: 9999px;
-        cursor: pointer;
-        position: relative;
-
-        .avatarImg{
-            width: 15rem;
-            border-radius: 9999px;
-
-            &::after{
-                content: '上傳頭像';
-                width: inherit;
-                padding: 0.8rem 3rem;
-                text-align: center;
-                font-size: 1.5rem;
-                background-color: rgb(117, 117, 117);
-                color: white;
-                font-weight: bolder;
-                opacity: 0.9;
-                bottom: 0;
-            }
-        }
-
-        .text_area{
-            position: absolute;
-            width: 15rem;
-            padding: 0.8rem 3rem;
-            text-align: center;
-            font-size: 1.5rem;
-            background-color: rgb(117, 117, 117);
-            color: white;
-            font-weight: bolder;
-            opacity: 0.9;
-            bottom: 0;
-        }
-    }
-
+<style lang="scss" scoped>
     .editContent{
         margin: 2.5rem auto;
         width: fit-content;

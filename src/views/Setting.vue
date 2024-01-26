@@ -16,10 +16,10 @@ export default {
 </script>
 <template>
     <div class="flex items-start">
-        <div class="accordion min-w-fit bg-[#afafaf] h-screen sticky top-0" id="accordionExample">
+        <div class="accordion accordion_left_nav bg-[#afafaf]  " id="accordionExample">
             <!-- 通用 -->
             <RouterLink to="/setting" class="area">
-                <div class="w-fit hover:scale-105 active:scale-95 mx-auto">
+                <div class="w-fit hover:scale-105 active:scale-95">
                     <i class="fa-regular fa-user mr-3" style="color: #ff0000;"></i>我的帳號
                 </div>
             </RouterLink>
@@ -55,7 +55,7 @@ export default {
 
             <!-- 通用 -->
             <RouterLink to="/setting/shopping" class="area">
-                <div class="w-fit hover:scale-105 active:scale-95 mx-auto">
+                <div class="w-fit hover:scale-105 active:scale-95">
                     <i class="fa-solid fa-cart-arrow-down mr-3" style="color: #ff0000;"></i>購物清單
                 </div>
             </RouterLink>
@@ -69,6 +69,15 @@ export default {
                         </div>
                     </button>
                 </h2>
+                <RouterLink to="/setting/addAccount" class=" hover:scale-105 active:scale-95">
+                    <div id="collapseFour" class="accordion show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">                 
+                        <div class="accordion-body">
+                            <div class="flex w-fit hover:scale-105 active:scale-95 mx-auto hover:text-red-600">
+                                <Icon icon="bi:database-fill-add" color="red" class="mr-3"  width="30"/>新增資料
+                            </div>                           
+                        </div>
+                    </div>
+                </RouterLink>
                 <RouterLink to="/setting/purchase" class=" hover:scale-105 active:scale-95">
                     <div id="collapseFour" class="accordion show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">                 
                         <div class="accordion-body">
@@ -112,9 +121,21 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+    .accordion_left_nav{
+        min-width: fit-content;
+        height: 100vh;
+        position: sticky;
+        top: 0px;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar{
+            width: 0;
+        }
+    }
     .area{
         display: block;
-        padding: 1.5rem;
+        padding: 1.5rem 2rem;
         text-align: center;
         font-size: 1.5rem;
         line-height: 2rem;
@@ -139,7 +160,7 @@ export default {
             font-weight: bold;
             padding: 0;
             color: white;
-            padding: 1.5rem 3.5rem;
+            padding: 1.5rem 2rem;
 
             &::after{
                 width: 0;

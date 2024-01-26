@@ -16,7 +16,7 @@ export default {
                 // 图片验证码
                 identifyCode: '',
                 // 验证码规则
-                identifyCodes: '123456789ABCDEFGHGKMNPQRSTUVWXYZqwertyuioplkjhgfdsazxcvbnm',
+                identifyCodes: '123456789ABCDEFGHGKMNPQRSTUVWXYZ',
                 // 輸入的驗證碼
                 inputIdentifyCode:''
             }
@@ -61,7 +61,7 @@ export default {
 </script>
 <template>
     <div class="login">
-        <form class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col" @submit.prevent="login">
+        <form class="bg-[#bcbcbc] w-fix p-6 rounded-xl font-bold flex flex-col" @submit.prevent="login" >
             <div>
                 <Icon icon="emojione:shopping-bags" width="100" class="mx-auto" />
                 <h1 class="text-3xl py-6 text-center">書海經</h1>
@@ -98,12 +98,11 @@ export default {
 
 <style lang="scss" scoped>
     .login{
-        height: 90vh;
         background-image: url('../../public/book.jpg');
         background-size:cover;
         background-position: center center;
         background-repeat: no-repeat;
-        padding: 0 10rem;
+        padding: 5rem 10rem;
         margin: 0 auto;
         display: flex;
         align-items: center;
