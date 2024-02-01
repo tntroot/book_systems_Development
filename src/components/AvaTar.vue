@@ -9,7 +9,7 @@ export default {
     },
     data() {
         return {
-            CROPPER: null, //创建一个cropper的全局对象
+            CROPPER: null, //創建一个cropper的全局對象
         }
     },
     methods:{
@@ -25,7 +25,6 @@ export default {
                 let catchImg = document.getElementById("catchImg");
                 // this.avatar = e.target.result;
                 catchImg.src = e.target.result;
-                console.log(e.target);
 
                 this.CROPPER = new Cropper(catchImg, {
                     aspectRatio: 16 / 16,    //固定裁剪框的比例（横/竖）,此处16/16则固定为正方形
@@ -53,11 +52,11 @@ export default {
                 fillColor: '#fff',
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high',
-            }).toDataURL("image.png");
+            }).toDataURL("image.jpg");
             
             dialog.close();
             this.$emit("imageBase64", imageBase64);
-            console.log(imageBase64.replace(/^data:image\/?[A-z]*;base64,/));
+            console.log(imageBase64);
 
         },
     }

@@ -56,7 +56,7 @@ export default {
             this.maxYear = thisdate.toLocaleString('sv').split(' ')[0];
             this.thisUserData = user_data.manager;
 
-            this.updateAvatar = user_data.img ? `data:image/png;base64, ${user_data.img}`  : "../../../public/people.png";
+            this.updateAvatar = user_data.img ? `data:image/jpg;base64, ${user_data.img}`  : "../../../public/people.png";
 
             console.log(user_data);
         },

@@ -1,4 +1,7 @@
 <script>
+import axios from 'axios';
+import functions from "@/assets/JS/functions.js"
+
 export default {
     data() {
         return {
@@ -13,6 +16,10 @@ export default {
     },
     mounted(){
         this.getdate();
+    },
+    async created(){
+        const data = await axios.get(`${functions.api}/setting/searchAllUser`, {withCredentials:true});
+        console.log(data);
     }
 }
 </script>

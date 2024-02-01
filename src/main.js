@@ -18,6 +18,7 @@ import "bootstrap"; // 從nodeModule中載入Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"; // Import css file
 
 import './assets/main.css'
+import functions from './assets/JS/functions';
 
 const app = createApp(App)
 
@@ -64,6 +65,7 @@ const app = createApp(App)
       .then( data =>{
         if(data.code === "200"){
           to.query={user_data:data.userShows};
+          console.log(data.userShows);
           if(to.meta.headerLogin){
             defineStore().setISLogin(true,data.userShows.account, data.userShows.img);
             next();
@@ -90,6 +92,7 @@ const app = createApp(App)
 const pinia = createPinia();
 
 app.use(router)
+app.use(functions)
 
 app.component('Icon',Icon)
 
